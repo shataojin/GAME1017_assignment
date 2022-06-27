@@ -27,6 +27,7 @@ class TitleState : public State
 {
 private: // Private properties.
 	std::vector<Button*> m_button;
+	Mix_Music* m_pMusic;
 public: // Public methods.
 	TitleState();
 	virtual void Enter();
@@ -38,7 +39,7 @@ public: // Public methods.
 class PauseState : public State
 {
 private:
-	std::vector<BButton*> m_buttons;
+	std::vector<Button*> m_button;
 public: // Public methods.
 	PauseState();
 	virtual void Enter();
@@ -70,6 +71,7 @@ public: // Public methods.
 	static std::vector<Bullet*>& Bullets() { return s_bullets; }
 	static std::vector<Enemy*>& Enemies() { return s_enemies; }
 	static std::vector<AiBullet*>& AiBullet() { return s_aibullets; }
+	int killCount = 0;
 };
 
 class LoseState : public State

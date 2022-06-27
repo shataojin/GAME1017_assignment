@@ -1,7 +1,8 @@
 #pragma once
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
-
+#include "SDL_image.h"
+#include "SDL_mixer.h"
 #include <iostream>
 #include <map>
 #include <string>

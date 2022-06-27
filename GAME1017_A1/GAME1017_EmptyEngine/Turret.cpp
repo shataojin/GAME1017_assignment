@@ -28,6 +28,7 @@ void Turret::Update()
 		GameState::Bullets().push_back(new Bullet({ (float)(tPos.x - 2), (float)(tPos.y + 2), (float)4, (float)4 }, 5, 0));
 		GameState::Bullets().shrink_to_fit();
 		cout << "new bullet vector capacity: " << GameState::Bullets().capacity() << endl;
+
 	}
 
 

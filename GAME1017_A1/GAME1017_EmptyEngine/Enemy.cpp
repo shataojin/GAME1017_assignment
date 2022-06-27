@@ -4,8 +4,8 @@
 #include "EventManager.h"
 #include "States.h"
 
-int Enemy::s_coolDown = 180;
-Enemy::Enemy(SDL_Rect dst) :m_dst(dst), m_src({ 80,0,40,57 }), m_speed(1), m_fireCtr(0) { }
+int Enemy::s_coolDown = 300;
+Enemy::Enemy(SDL_Rect dst) :m_dst(dst), m_src({ 0,0,40,40 }), m_speed(1), m_fireCtr(0) { }
 
 void Enemy::Update()
 {
