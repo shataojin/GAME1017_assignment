@@ -16,7 +16,7 @@ void State::Render()
 	SDL_RenderPresent(Engine::Instance().GetRenderer());
 }
 
-TitleState::TitleState(){}
+TitleState::TitleState() {}
 
 void TitleState::Enter()
 {
@@ -34,8 +34,8 @@ void TitleState::Update()
 {
 	if (EVMA::KeyPressed(SDL_SCANCODE_N))
 	{
-		
-		STMA::ChangeState( new GameState() );
+
+		STMA::ChangeState(new GameState());
 	}
 	for (unsigned i = 0; i < m_button.size(); i++)
 	{
@@ -73,7 +73,7 @@ void TitleState::Exit()
 	cout << "exit title state----->" << endl;
 }
 
-PauseState::PauseState(){}
+PauseState::PauseState() {}
 
 void PauseState::Enter()
 {
@@ -128,7 +128,7 @@ void GameState::ClearTurrets()
 	m_turrets.shrink_to_fit();
 }
 
-GameState::GameState():m_spawnCtr(0) {}
+GameState::GameState() :m_spawnCtr(0) {}
 
 void GameState::Enter()
 {
@@ -139,9 +139,9 @@ void GameState::Enter()
 	Mix_PlayMusic(m_pMusic, -1);
 	Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 2048);
 	Mix_AllocateChannels(16);
-	s_enemies.push_back(new Enemy({512, 200, 40, 57}));
+	s_enemies.push_back(new Enemy({ 512, 200, 40, 57 }));
 	m_turrets.push_back(new Turret({ 50 ,250,100,100 }));
-	
+
 }
 
 void GameState::Update()
@@ -151,10 +151,11 @@ void GameState::Update()
 		m_pSound = Mix_LoadWAV("Hockey Shot 3.mp3");
 		Mix_PlayChannel(-1, m_pSound, 0);
 	}
-	if (killCount >= 5)
+	if (killCount >= 3)
 	{
 		m_pSound = Mix_LoadWAV("audio/win.wav");
 		Mix_PlayChannel(-1, m_pSound, 0);
+		GameState::Exit();
 		STMA::ChangeState(new WinState());
 	}
 	if (EVMA::KeyPressed(SDL_SCANCODE_5))
@@ -164,8 +165,8 @@ void GameState::Update()
 	}
 	if (EVMA::KeyPressed(SDL_SCANCODE_6))
 	{
-		m_pMusic = Mix_LoadMUS("audio/Bgm_2.mp3");
-		Mix_PlayMusic(m_pMusic, -1);
+		m_pMusic = Mix_LoadMUS("audio/Bgm_2.mp3"); 
+			Mix_PlayMusic(m_pMusic, -1);
 		Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 2048);
 		Mix_AllocateChannels(16);
 	}
@@ -191,7 +192,7 @@ void GameState::Update()
 		ClearTurrets();
 	}
 	if (m_spawnCtr++ % 180 == 0)
-		s_enemies.push_back(new Enemy({ 1024 ,rand() % (750-20), 40, 57 }));
+		s_enemies.push_back(new Enemy({ 1024 ,rand() % (750 - 20), 40, 57 }));
 	for (unsigned i = 0; i < m_turrets.size(); i++)
 		m_turrets[i]->Update();
 	for (unsigned i = 0; i < s_enemies.size(); i++)
@@ -207,12 +208,12 @@ void GameState::Update()
 	with wall*/
 	for (unsigned i = 0; i < s_enemies.size(); i++)
 	{
-		
-		if (s_enemies[i]->GetPos().x <-20 )
+
+		if (s_enemies[i]->GetPos().x < -20)
 		{
-			cout << "Enemy delete by wall"<<s_enemies[i]->GetPos().y << endl;
+			cout << "Enemy delete by wall" << s_enemies[i]->GetPos().y << endl;
 			delete s_enemies[i];
-			s_enemies[i]=(new Enemy({ 1024 ,rand() % (720 - 40), 40, 57 }));
+			s_enemies[i] = (new Enemy({ 1024 ,rand() % (720 - 40), 40, 57 }));
 		}
 	}
 
@@ -231,7 +232,7 @@ void GameState::Update()
 				STMA::ChangeState(new LoseState());
 				break;
 			}
-			
+
 		}
 	}
 
@@ -278,7 +279,7 @@ void GameState::Update()
 		}
 	}
 
-	 
+
 
 
 
@@ -309,10 +310,10 @@ void GameState::Update()
 	for (int e = 0; e < s_enemies.size(); e++)
 	{
 		SDL_Rect ePos = s_enemies[e]->m_dst;
-		for (int b= 0; b < s_bullets.size(); b++)
+		for (int b = 0; b < s_bullets.size(); b++)
 		{
 			SDL_FRect bPos = s_bullets[b]->m_dst;
-			if(COMA::AABBCheck(ePos, bPos))
+			if (COMA::AABBCheck(ePos, bPos))
 			{
 				cout << "you killed one enemy......" << endl;
 				delete s_enemies[e];
@@ -321,11 +322,11 @@ void GameState::Update()
 				s_bullets.erase(s_bullets.begin() + e);
 				s_bullets.shrink_to_fit();
 				killCount++;
-				cout << "kill count: "<< killCount << endl;
+				cout << "kill count: " << killCount << endl;
 				m_pSound = Mix_LoadWAV("audio/died.wav");
 				Mix_PlayChannel(-1, m_pSound, 0);
 				break;
-				
+
 			}
 		}
 	}
@@ -349,9 +350,9 @@ void GameState::Render()
 	for (unsigned i = 0; i < s_aibullets.size(); i++)
 		s_aibullets[i]->Render();
 
-	
+
 	// This code below prevents SDL_RenderPresent from running twice in one frame.
-	if ( dynamic_cast<GameState*>( STMA::GetStates().back() ) ) // If current state is GameState.
+	if (dynamic_cast<GameState*>(STMA::GetStates().back())) // If current state is GameState.
 		State::Render();
 }
 
@@ -391,7 +392,7 @@ void GameState::Exit()
 
 void GameState::Resume()
 {
-	
+
 }
 
 // This is how static properties are allocated.
