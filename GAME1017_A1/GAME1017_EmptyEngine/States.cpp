@@ -91,33 +91,34 @@ void GameState::Enter()
 {
 TEMA::Load("Img/Turret.png", "turret");
 	TEMA::Load("Img/Enemies.png", "enemy");
-	s_enemies.push_back(new Enemy({512, -200, 40, 57}));
-	// Create the DOM and load the XML file.
-	XMLDocument xmlDoc;
-	xmlDoc.LoadFile("SavedObjects.xml");
-	XMLNode* pRoot = xmlDoc.FirstChildElement("Root");
-	// Iterate through the Turret elements in the file and push_back new Turrets into the m_turrets vector.
-	XMLElement* pElement = pRoot->FirstChildElement("GameObject");
-	while (pElement != nullptr)
-	{
-		if (strcmp(pElement->Attribute("class"), "enemies") == 0)
-		{
-			int x, y;
-			pElement->QueryIntAttribute("x_position", &x);
-			pElement->QueryIntAttribute("y_position", &y);
-			s_enemies.push_back(new Enemy({ x ,y ,40,57 }));
-			cout << x << y << endl;
-		}
-		else if (strcmp(pElement->Attribute("class"), "turret") == 0)
-		{
-			int x,y;
-			pElement->QueryIntAttribute("x_position", &x);
-			pElement->QueryIntAttribute("y_position", &y);
-			m_turrets.push_back(new Turret({ x ,y,100,100 }));
-			cout << x << y << endl;
-		}
-		pElement = pElement->NextSiblingElement("GameObject");
-	}
+	s_enemies.push_back(new Enemy({512, 200, 40, 57}));
+	m_turrets.push_back(new Turret({ 50 ,250,100,100 }));
+	//// Create the DOM and load the XML file.
+	//XMLDocument xmlDoc;
+	//xmlDoc.LoadFile("SavedObjects.xml");
+	//XMLNode* pRoot = xmlDoc.FirstChildElement("Root");
+	//// Iterate through the Turret elements in the file and push_back new Turrets into the m_turrets vector.
+	//XMLElement* pElement = pRoot->FirstChildElement("GameObject");
+	//while (pElement != nullptr)
+	//{
+	//	if (strcmp(pElement->Attribute("class"), "enemies") == 0)
+	//	{
+	//		int x, y;
+	//		pElement->QueryIntAttribute("x_position", &x);
+	//		pElement->QueryIntAttribute("y_position", &y);
+	//		s_enemies.push_back(new Enemy({ x ,y ,40,57 }));
+	//		cout << x << y << endl;
+	//	}
+	//	else if (strcmp(pElement->Attribute("class"), "turret") == 0)
+	//	{
+	//		int x,y;
+	//		pElement->QueryIntAttribute("x_position", &x);
+	//		pElement->QueryIntAttribute("y_position", &y);
+	//		m_turrets.push_back(new Turret({ x ,y,100,100 }));
+	//		cout << x << y << endl;
+	//	}
+	//	pElement = pElement->NextSiblingElement("GameObject");
+	//}
 }
 
 void GameState::Update()
@@ -128,14 +129,14 @@ void GameState::Update()
 	}
 	if (EVMA::KeyPressed(SDL_SCANCODE_T))
 	{
-		m_turrets.push_back(new Turret({ 50,618,100,100 }));
+		m_turrets.push_back(new Turret({ 50,250,100,100 }));
 	}
 	if (EVMA::KeyPressed(SDL_SCANCODE_C))
 	{
 		ClearTurrets();
 	}
 	if (m_spawnCtr++ % 180 == 0)
-		s_enemies.push_back(new Enemy({ rand() % (1024 - 40), -57, 40, 57 }));
+		s_enemies.push_back(new Enemy({ 1048 ,rand() % (750-20), 40, 57 }));
 	for (unsigned i = 0; i < m_turrets.size(); i++)
 		m_turrets[i]->Update();
 	for (unsigned i = 0; i < s_enemies.size(); i++)
@@ -171,50 +172,50 @@ void GameState::Update()
 	//}
 
 
-	//DONE NEW ENEMY
-	for (unsigned i = 0; i < s_enemies.size(); i++)
-	{
-		if (s_enemies[i]->GetPos().y > HEIGHT )
-		{
-			cout << "Enemy delete by wall"<<s_enemies[i]->GetPos().y << endl;
-			delete s_enemies[i];
-			s_enemies[i]=(new Enemy({ rand() % (1024 - 40), -57, 40, 57 }));
-		}
-	}
-	 
-	 //bullet done
-	SDL_Point cPos = GameState::Enemies()[0]->GetPos();
-	for (unsigned i = 0; i < m_turrets.size(); i++)
-	{
-		SDL_Point tPos = { m_turrets[i]->GetPos().x, m_turrets[i]->GetPos().y };
-		for (unsigned i = 0; i < s_bullets.size(); i++)
-		{
-			if (s_bullets[i]->m_dst.x > WIDTH || s_bullets[i]->m_dst.x <0 || s_bullets[i]->m_dst.y >WIDTH || s_bullets[i]->m_dst.y < 0)
-			{
-				delete s_bullets[i];
-				s_bullets[i] = (new Bullet({ (float)(tPos.x - 2), (float)(tPos.y + 2), (float)4, (float)4 }, cPos.x, cPos.y));
-			}
-		}
-	}
+	////DONE NEW ENEMY
+	//for (unsigned i = 0; i < s_enemies.size(); i++)
+	//{
+	//	if (s_enemies[i]->GetPos().y > HEIGHT )
+	//	{
+	//		cout << "Enemy delete by wall"<<s_enemies[i]->GetPos().y << endl;
+	//		delete s_enemies[i];
+	//		s_enemies[i]=(new Enemy({ rand() % (1024 - 40), -57, 40, 57 }));
+	//	}
+	//}
+	// 
+	// //bullet done
+	//SDL_Point cPos = GameState::Enemies()[0]->GetPos();
+	//for (unsigned i = 0; i < m_turrets.size(); i++)
+	//{
+	//	SDL_Point tPos = { m_turrets[i]->GetPos().x, m_turrets[i]->GetPos().y };
+	//	for (unsigned i = 0; i < s_bullets.size(); i++)
+	//	{
+	//		if (s_bullets[i]->m_dst.x > WIDTH || s_bullets[i]->m_dst.x <0 || s_bullets[i]->m_dst.y >WIDTH || s_bullets[i]->m_dst.y < 0)
+	//		{
+	//			delete s_bullets[i];
+	//			s_bullets[i] = (new Bullet({ (float)(tPos.x - 2), (float)(tPos.y + 2), (float)4, (float)4 }, cPos.x, cPos.y));
+	//		}
+	//	}
+	//}
 
 
-	for (int e = 0; e < s_enemies.size(); e++)
-	{
-		SDL_Rect ePos = s_enemies[e]->m_dst;
-		for (int b= 0; b < s_bullets.size(); b++)
-		{
-			SDL_FRect bPos = s_bullets[b]->m_dst;
-			if(COMA::AABBCheck(ePos, bPos))
-			{
-				cout << "you killed one enemy......" << endl;
-				delete s_enemies[e];
-				s_enemies[e] = (new Enemy({ rand() % (1024 - 40), -57, 40, 57 }));
-				delete s_bullets[b];
-				s_bullets[b] = (new Bullet({ (float)(bPos.x - 2), (float)(bPos.y + 2), (float)4, (float)4 }, cPos.x, cPos.y));
-				
-			}
-		}
-	}
+	//for (int e = 0; e < s_enemies.size(); e++)
+	//{
+	//	SDL_Rect ePos = s_enemies[e]->m_dst;
+	//	for (int b= 0; b < s_bullets.size(); b++)
+	//	{
+	//		SDL_FRect bPos = s_bullets[b]->m_dst;
+	//		if(COMA::AABBCheck(ePos, bPos))
+	//		{
+	//			cout << "you killed one enemy......" << endl;
+	//			delete s_enemies[e];
+	//			s_enemies[e] = (new Enemy({ rand() % (1024 - 40), -57, 40, 57 }));
+	//			delete s_bullets[b];
+	//			s_bullets[b] = (new Bullet({ (float)(bPos.x - 2), (float)(bPos.y + 2), (float)4, (float)4 }, cPos.x, cPos.y));
+	//			
+	//		}
+	//	}
+	//}
 
 
 

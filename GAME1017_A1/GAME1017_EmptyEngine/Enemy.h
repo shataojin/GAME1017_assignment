@@ -3,14 +3,15 @@
 #define _ENEMY_H_
 
 #include <SDL.h>
-
+#include "Bullet.h"
 class Enemy
 {
 private:
 	
 	int m_speed;
 	int m_hits; // Maybe after 4 hits, the enemy is destroyed.
-
+	int m_fireCtr;
+	static int s_coolDown;
 public:
 	Enemy(SDL_Rect dst);
 	void Update();

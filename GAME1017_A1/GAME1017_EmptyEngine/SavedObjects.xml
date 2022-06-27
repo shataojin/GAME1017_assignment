@@ -1,24 +1,14 @@
 <Root>
-    <GameObject class="turret" x_position="668" y_position="541"/>
-    <GameObject class="enemies" x_position="532" y_position="-18"/>
-    <GameObject class="enemies" x_position="552" y_position="379"/>
-    <GameObject class="enemies" x_position="572" y_position="643"/>
-    <GameObject class="enemies" x_position="649" y_position="16"/>
-    <GameObject class="enemies" x_position="631" y_position="64"/>
-    <GameObject class="enemies" x_position="74" y_position="377"/>
-    <GameObject class="enemies" x_position="544" y_position="514"/>
-    <GameObject class="enemies" x_position="770" y_position="124"/>
-    <GameObject class="enemies" x_position="776" y_position="117"/>
-    <GameObject class="enemies" x_position="1018" y_position="255"/>
-    <GameObject class="enemies" x_position="618" y_position="382"/>
-    <GameObject class="enemies" x_position="414" y_position="498"/>
-    <GameObject class="enemies" x_position="620" y_position="521"/>
-    <GameObject class="enemies" x_position="652" y_position="348"/>
-    <GameObject class="enemies" x_position="798" y_position="159"/>
-    <GameObject class="enemies" x_position="433" y_position="-12"/>
-    <GameObject class="enemies" x_position="882" y_position="25"/>
-    <GameObject class="enemies" x_position="426" y_position="522"/>
-    <GameObject class="enemies" x_position="154" y_position="342"/>
-    <GameObject class="enemies" x_position="762" y_position="162"/>
-    <GameObject class="enemies" x_position="644" y_position="125"/>
+    <GameObject class="turret" x_position="475" y_position="489"/>
+    <GameObject class="enemies" x_position="-1104" y_position="228"/>
+    <GameObject class="enemies" x_position="-592" y_position="296"/>
+    <GameObject class="enemies" x_position="-412" y_position="739"/>
+    <GameObject class="enemies" x_position="-232" y_position="751"/>
+    <GameObject class="enemies" x_position="-52" y_position="157"/>
+    <GameObject class="enemies" x_position="128" y_position="201"/>
+    <GameObject class="enemies" x_position="308" y_position="438"/>
+    <GameObject class="enemies" x_position="488" y_position="263"/>
+    <GameObject class="enemies" x_position="668" y_position="88"/>
+    <GameObject class="enemies" x_position="848" y_position="315"/>
+    <GameObject class="enemies" x_position="1028" y_position="72"/>
 </Root>
