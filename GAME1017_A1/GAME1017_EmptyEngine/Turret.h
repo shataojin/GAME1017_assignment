@@ -15,6 +15,7 @@ private:
 	bool m_hasTarget;
 	int m_fireCtr;
 	static int s_coolDown;
+	int m_speed = 3;
 public:
 	double m_angle;
 	Turret(SDL_Rect dst);
