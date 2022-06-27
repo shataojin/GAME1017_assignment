@@ -4,13 +4,15 @@
 #include "Turret.h"
 #include "Enemy.h"
 #include <vector>
-
+#include "Button.h"
 // An abstract class is one that cannot be instantiated. 
 // Why? Because they'd be a base class most likely.
 class State // This is the abstract base class for all state subclasses.
 {
 protected: // Private but inherited.
 	State() = default; // Or State() {};
+	SDL_Texture* m_pBGText;
+	SDL_Renderer* m_pRenderer;
 public:
 	virtual void Enter() = 0; // = 0 means pure virtual. Method MUST be defined in subclass.
 	virtual void Update() = 0;
@@ -22,6 +24,7 @@ public:
 class TitleState : public State
 {
 private: // Private properties.
+	std::vector<Button*> m_button;
 public: // Public methods.
 	TitleState();
 	virtual void Enter();
@@ -32,6 +35,8 @@ public: // Public methods.
 
 class PauseState : public State
 {
+private:
+	std::vector<Button*> m_button;
 public: // Public methods.
 	PauseState();
 	virtual void Enter();

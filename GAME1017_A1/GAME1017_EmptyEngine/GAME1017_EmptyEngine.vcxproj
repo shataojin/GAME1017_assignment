@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="AI_Bullet.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -157,6 +158,7 @@
   <ItemGroup>
     <ClInclude Include="AI_Bullet.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Engine.h" />

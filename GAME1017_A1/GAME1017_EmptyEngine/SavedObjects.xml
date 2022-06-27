@@ -1,7 +1,5 @@
 <Root>
-    <GameObject class="turret" x_position="400" y_position="411"/>
-    <GameObject class="enemies" x_position="31" y_position="228"/>
-    <GameObject class="enemies" x_position="567" y_position="126"/>
-    <GameObject class="enemies" x_position="747" y_position="555"/>
-    <GameObject class="enemies" x_position="927" y_position="668"/>
+    <GameObject class="turret" x_position="100" y_position="300"/>
+    <GameObject class="enemies" x_position="458" y_position="228"/>
+    <GameObject class="enemies" x_position="994" y_position="736"/>
 </Root>

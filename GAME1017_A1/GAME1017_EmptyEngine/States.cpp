@@ -20,7 +20,10 @@ TitleState::TitleState(){}
 
 void TitleState::Enter()
 {
-	
+	cout << "Enter Title State --> " << endl;
+	//load music track, add it to map, and  play
+	TEMA::Load("Img/b.jpg", "bg");
+	TEMA::Load("Img/startButton.png", "bt");
 }
 
 void TitleState::Update()
@@ -30,18 +33,30 @@ void TitleState::Update()
 		
 		STMA::ChangeState( new GameState() );
 	}
+	for (unsigned i = 0; i < m_button.size(); i++)
+	{
+		SDL_Rect bPos = m_button[i]->m_dst;
+		if (EVMA::MousePressed(1) && (COMA::PointAABBCheck(EVMA::GetMousePos(), bPos)))
+		{
+			STMA::ChangeState(new GameState());
+		}
+	}
 }
 
 void TitleState::Render()
 {
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 0, 255, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
+	SDL_RenderCopy(Engine::Instance().GetRenderer(), TEMA::GetTexture("bg"), 0, 0);
+	m_button.push_back(new Button({ WIDTH / 2 - 75 ,HEIGHT / 2 + 100,150,50 }));
+	for (unsigned i = 0; i < m_button.size(); i++)
+		m_button[i]->Render();
 	State::Render();
 }
 
 void TitleState::Exit()
 {
-	
+	cout << "exit title state----->" << endl;
 }
 
 PauseState::PauseState(){}
