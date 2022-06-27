@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include "tinyxml2.h"
+#include"SoundManager.h"
 using namespace tinyxml2;
 using namespace std;
 
@@ -56,6 +57,8 @@ void TitleState::Render()
 
 void TitleState::Exit()
 {
+	TEMA::Unload("bg");
+	TEMA::Unload("bt");
 	cout << "exit title state----->" << endl;
 }
 
@@ -63,13 +66,22 @@ PauseState::PauseState(){}
 
 void PauseState::Enter()
 {
-	
+	cout << "Enter pause State --> " << endl;
+	TEMA::Load("Img/backButton.png", "bb");
 }
 
 void PauseState::Update()
 {
 	if (EVMA::KeyPressed(SDL_SCANCODE_R))
 		STMA::PopState();
+	for (unsigned i = 0; i < m_buttons.size(); i++)
+	{
+		SDL_Rect bPos = m_buttons[i]->m_dst;
+		if (EVMA::MousePressed(1) && (COMA::PointAABBCheck(EVMA::GetMousePos(), bPos)))
+		{
+			STMA::PopState();
+		}
+	}
 }
 
 void PauseState::Render()
@@ -81,12 +93,17 @@ void PauseState::Render()
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 255, 255, 128);
 	SDL_Rect rect = { 255, 128, 512, 512 };
 	SDL_RenderFillRect(Engine::Instance().GetRenderer(), &rect);
+	m_buttons.push_back(new BButton({ WIDTH / 2 - 75 ,HEIGHT / 2 + 100,150,50 }));
+	for (unsigned i = 0; i < m_buttons.size(); i++)
+		m_buttons[i]->Render();
+
 	State::Render();
 }
 
 void PauseState::Exit()
 {
-	
+	TEMA::Unload("bb");
+	cout << "exit pause state" << endl;
 }
 
 void GameState::ClearTurrets()
@@ -104,8 +121,11 @@ GameState::GameState():m_spawnCtr(0) {}
 
 void GameState::Enter()
 {
-TEMA::Load("Img/Turret.png", "turret");
+	TEMA::Load("Img/Turret.png", "turret");
 	TEMA::Load("Img/Enemies.png", "enemy");
+	m_pMusic = Mix_LoadMUS("audio/Bgm_2.mp3");
+	Mix_PlayMusic(m_pMusic, -1);
+	Mix_AllocateChannels(5);
 	s_enemies.push_back(new Enemy({512, 200, 40, 57}));
 	m_turrets.push_back(new Turret({ 50 ,250,100,100 }));
 	//// Create the DOM and load the XML file.
@@ -141,6 +161,14 @@ void GameState::Update()
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
 	{
 		STMA::PushState(new PauseState());
+	}
+	if (EVMA::KeyPressed(SDL_SCANCODE_L))
+	{
+		STMA::ChangeState(new LoseState());
+	}
+	if (EVMA::KeyPressed(SDL_SCANCODE_W))
+	{
+		STMA::ChangeState(new WinState());
 	}
 	/*if (EVMA::KeyPressed(SDL_SCANCODE_T))
 	{
@@ -327,40 +355,40 @@ void GameState::Render()
 
 void GameState::Exit()
 {
-	XMLDocument xmlDoc;
-	//DeleteChildren
-	xmlDoc.DeleteChildren();
-	// Create and insert a Root element.
-	XMLNode* pRoot = xmlDoc.NewElement("Root");
-	xmlDoc.InsertEndChild(pRoot);
+	//XMLDocument xmlDoc;
+	////DeleteChildren
+	//xmlDoc.DeleteChildren();
+	//// Create and insert a Root element.
+	//XMLNode* pRoot = xmlDoc.NewElement("Root");
+	//xmlDoc.InsertEndChild(pRoot);
 
-	for (unsigned i = 0; i < m_turrets.size(); i++)
-	{
+	//for (unsigned i = 0; i < m_turrets.size(); i++)
+	//{
 
-		/*m_turrets[i]->GetPos().x;
-		m_turrets[i]->GetPos().y;*/
+	//	/*m_turrets[i]->GetPos().x;
+	//	m_turrets[i]->GetPos().y;*/
 
-		XMLElement* pElement = xmlDoc.NewElement("GameObject");
-		pElement->SetAttribute("class", "turret");
-		pElement->SetAttribute("x_position", m_turrets[i]->GetPos().x);
-		pElement->SetAttribute("y_position", m_turrets[i]->GetPos().y);
-		pRoot->InsertEndChild(pElement);
-		xmlDoc.SaveFile("SavedObjects.xml");
-	}
+	//	XMLElement* pElement = xmlDoc.NewElement("GameObject");
+	//	pElement->SetAttribute("class", "turret");
+	//	pElement->SetAttribute("x_position", m_turrets[i]->GetPos().x);
+	//	pElement->SetAttribute("y_position", m_turrets[i]->GetPos().y);
+	//	pRoot->InsertEndChild(pElement);
+	//	xmlDoc.SaveFile("SavedObjects.xml");
+	//}
 
-	for (unsigned i = 0; i < s_enemies.size(); i++)
-	{
+	//for (unsigned i = 0; i < s_enemies.size(); i++)
+	//{
 
-		/*m_turrets[i]->GetPos().x;
-		m_turrets[i]->GetPos().y;*/
+	//	/*m_turrets[i]->GetPos().x;
+	//	m_turrets[i]->GetPos().y;*/
 
-		XMLElement* pElement = xmlDoc.NewElement("GameObject");
-		pElement->SetAttribute("class", "enemies");
-		pElement->SetAttribute("x_position", s_enemies[i]->GetPos().x);
-		pElement->SetAttribute("y_position", s_enemies[i]->GetPos().y);
-		pRoot->InsertEndChild(pElement);
-		xmlDoc.SaveFile("SavedObjects.xml");
-	}
+	//	XMLElement* pElement = xmlDoc.NewElement("GameObject");
+	//	pElement->SetAttribute("class", "enemies");
+	//	pElement->SetAttribute("x_position", s_enemies[i]->GetPos().x);
+	//	pElement->SetAttribute("y_position", s_enemies[i]->GetPos().y);
+	//	pRoot->InsertEndChild(pElement);
+	//	xmlDoc.SaveFile("SavedObjects.xml");
+	//}
 
 
 	ClearTurrets();
@@ -389,3 +417,98 @@ void GameState::Resume()
 std::vector<Bullet*> GameState::s_bullets;
 std::vector<Enemy*> GameState::s_enemies;
 std::vector<AiBullet*> GameState::s_aibullets;
+
+
+
+
+LoseState::LoseState() {}
+
+void LoseState::Enter()
+{
+	cout << "Enter  State --> " << endl;
+	//load music track, add it to map, and  play
+	TEMA::Load("Img/cloud.png", "bg");
+	TEMA::Load("Img/restartButton.png", "bt");
+}
+
+void LoseState::Update()
+{
+	if (EVMA::KeyPressed(SDL_SCANCODE_R))
+	{
+		STMA::ChangeState(new GameState());
+	}
+	for (unsigned i = 0; i < m_button.size(); i++)
+	{
+		SDL_Rect bPos = m_button[i]->m_dst;
+		if (EVMA::MousePressed(1) && (COMA::PointAABBCheck(EVMA::GetMousePos(), bPos)))
+		{
+			STMA::ChangeState(new GameState());
+		}
+	}
+}
+
+void LoseState::Render()
+{
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 255, 255, 255);
+	SDL_RenderClear(Engine::Instance().GetRenderer());
+	SDL_RenderCopy(Engine::Instance().GetRenderer(), TEMA::GetTexture("bg"), 0, 0);
+	m_button.push_back(new Button({ WIDTH / 2 - 75 ,HEIGHT / 2 + 100,150,50 }));
+	for (unsigned i = 0; i < m_button.size(); i++)
+		m_button[i]->Render();
+
+	State::Render();
+}
+
+void LoseState::Exit()
+{
+	TEMA::Unload("bg");
+	TEMA::Unload("bt");
+	cout << "exit state----->" << endl;
+}
+
+
+
+WinState::WinState() {}
+
+void WinState::Enter()
+{
+	cout << "Enter  State --> " << endl;
+	//load music track, add it to map, and  play
+	TEMA::Load("Img/w.jpg", "bg");
+	TEMA::Load("Img/restartButton.png", "bt");
+}
+
+void WinState::Update()
+{
+	if (EVMA::KeyPressed(SDL_SCANCODE_R))
+	{
+		STMA::ChangeState(new GameState());
+	}
+
+	for (unsigned i = 0; i < m_button.size(); i++)
+	{
+		SDL_Rect bPos = m_button[i]->m_dst;
+		if (EVMA::MousePressed(1) && (COMA::PointAABBCheck(EVMA::GetMousePos(), bPos)))
+		{
+			STMA::ChangeState(new GameState());
+		}
+	}
+}
+
+void WinState::Render()
+{
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 255, 255, 255);
+	SDL_RenderClear(Engine::Instance().GetRenderer());
+	SDL_RenderCopy(Engine::Instance().GetRenderer(), TEMA::GetTexture("bg"), 0, 0);
+	m_button.push_back(new Button({ WIDTH / 2 - 75 ,HEIGHT / 2 + 100,150,50 }));
+	for (unsigned i = 0; i < m_button.size(); i++)
+		m_button[i]->Render();
+	State::Render();
+}
+
+void WinState::Exit()
+{
+	TEMA::Unload("bg");
+	TEMA::Unload("bt");
+	cout << "exit  state----->" << endl;
+}
