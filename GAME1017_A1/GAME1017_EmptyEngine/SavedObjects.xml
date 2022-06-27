@@ -1,0 +1,18 @@
+<Root>
+    <GameObject class="turret" x_position="724" y_position="543"/>
+    <GameObject class="enemies" x_position="532" y_position="64"/>
+    <GameObject class="enemies" x_position="552" y_position="235"/>
+    <GameObject class="enemies" x_position="788" y_position="65"/>
+    <GameObject class="enemies" x_position="554" y_position="596"/>
+    <GameObject class="enemies" x_position="491" y_position="733"/>
+    <GameObject class="enemies" x_position="117" y_position="343"/>
+    <GameObject class="enemies" x_position="45" y_position="336"/>
+    <GameObject class="enemies" x_position="897" y_position="179"/>
+    <GameObject class="enemies" x_position="664" y_position="307"/>
+    <GameObject class="enemies" x_position="602" y_position="472"/>
+    <GameObject class="enemies" x_position="319" y_position="747"/>
+    <GameObject class="enemies" x_position="365" y_position="567"/>
+    <GameObject class="enemies" x_position="355" y_position="378"/>
+    <GameObject class="enemies" x_position="394" y_position="207"/>
+    <GameObject class="enemies" x_position="911" y_position="27"/>
+</Root>
