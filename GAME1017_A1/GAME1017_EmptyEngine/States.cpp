@@ -63,6 +63,13 @@ void TitleState::Exit()
 {
 	TEMA::Unload("bg");
 	TEMA::Unload("bt");
+	for (unsigned i = 0; i < m_button.size(); i++)
+	{
+		delete m_button[i];
+		m_button[i] = nullptr;
+	}
+	m_button.clear();
+	m_button.shrink_to_fit();
 	cout << "exit title state----->" << endl;
 }
 
@@ -144,7 +151,7 @@ void GameState::Update()
 		m_pSound = Mix_LoadWAV("Hockey Shot 3.mp3");
 		Mix_PlayChannel(-1, m_pSound, 0);
 	}
-	if (killCount >= 3)
+	if (killCount >= 5)
 	{
 		m_pSound = Mix_LoadWAV("audio/win.wav");
 		Mix_PlayChannel(-1, m_pSound, 0);
@@ -196,133 +203,132 @@ void GameState::Update()
 
 
 
-	//AI
-	//with wall
-	//for (unsigned i = 0; i < s_enemies.size(); i++)
-	//{
-	//	
-	//	if (s_enemies[i]->GetPos().x <-20 )
-	//	{
-	//		cout << "Enemy delete by wall"<<s_enemies[i]->GetPos().y << endl;
-	//		delete s_enemies[i];
-	//		s_enemies[i]=(new Enemy({ 1024 ,rand() % (720 - 40), 40, 57 }));
-	//	}
-	//}
+	/*AI
+	with wall*/
+	for (unsigned i = 0; i < s_enemies.size(); i++)
+	{
+		
+		if (s_enemies[i]->GetPos().x <-20 )
+		{
+			cout << "Enemy delete by wall"<<s_enemies[i]->GetPos().y << endl;
+			delete s_enemies[i];
+			s_enemies[i]=(new Enemy({ 1024 ,rand() % (720 - 40), 40, 57 }));
+		}
+	}
 
-	////ai with player
-	//for (unsigned i = 0; i < m_turrets.size(); i++)
-	//{
-	//	SDL_Rect tPos = m_turrets[i]->m_dst;
-	//	for (unsigned i = 0; i < s_enemies.size(); i++)
-	//	{
-	//		SDL_Rect ePos = s_enemies[i]->m_dst;
-	//		if (COMA::AABBCheck(ePos, tPos))
-	//		{
-	//			cout << "change state to lose" << endl;
-	//			m_pSound = Mix_LoadWAV("audio/Button.wav");
-	//			Mix_PlayChannel(-1, m_pSound, 0);
-	//			STMA::ChangeState(new LoseState());
-	//			break;
-	//		}
-	//		
-	//	}
-	//}
+	//ai with player
+	for (unsigned i = 0; i < m_turrets.size(); i++)
+	{
+		SDL_Rect tPos = m_turrets[i]->m_dst;
+		for (unsigned i = 0; i < s_enemies.size(); i++)
+		{
+			SDL_Rect ePos = s_enemies[i]->m_dst;
+			if (COMA::AABBCheck(ePos, tPos))
+			{
+				cout << "change state to lose" << endl;
+				m_pSound = Mix_LoadWAV("audio/Button.wav");
+				Mix_PlayChannel(-1, m_pSound, 0);
+				STMA::ChangeState(new LoseState());
+				break;
+			}
+			
+		}
+	}
 
 
-	//// ai bullet with wall
+	// ai bullet with wall
 
-	//for (unsigned i = 0; i < s_aibullets.size(); i++)
-	//{
-	//	if (s_aibullets[i]->m_dst.x < 0)
-	//	{
-	//		cout << "ai bullet delete by wall" << s_aibullets[i]->m_dst.x << endl;
-	//		delete s_aibullets[i];
-	//		s_aibullets[i] = nullptr;
-	//		s_aibullets.erase(s_aibullets.begin() + i);
-	//		s_aibullets.shrink_to_fit();
-	//		break;
-	//	}
-	//}
+	for (unsigned i = 0; i < s_aibullets.size(); i++)
+	{
+		if (s_aibullets[i]->m_dst.x < 0)
+		{
+			cout << "ai bullet delete by wall" << s_aibullets[i]->m_dst.x << endl;
+			delete s_aibullets[i];
+			s_aibullets[i] = nullptr;
+			s_aibullets.erase(s_aibullets.begin() + i);
+			s_aibullets.shrink_to_fit();
+			break;
+		}
+	}
 
-	//// ai bullet with player
+	// ai bullet with player
 
-	//for (unsigned i = 0; i < m_turrets.size(); i++)
-	//{
-	//	SDL_Rect tPos = m_turrets[i]->m_dst;
-	//	for (unsigned i = 0; i < s_aibullets.size(); i++)
-	//	{
-	//		SDL_FRect bPos = s_aibullets[i]->m_dst;
-	//		if (COMA::AABBCheck(tPos, bPos))
-	//		{
-	//			cout << "change state to lose" << endl;
-	//			m_pSound = Mix_LoadWAV("audio/Button.wav");
-	//			Mix_PlayChannel(-1, m_pSound, 0);
-	//			/*delete s_aibullets[i];
-	//			s_aibullets[i] = nullptr;
-	//			s_aibullets.erase(s_aibullets.begin() + i);
-	//			s_aibullets.shrink_to_fit();
+	for (unsigned i = 0; i < m_turrets.size(); i++)
+	{
+		SDL_Rect tPos = m_turrets[i]->m_dst;
+		for (unsigned i = 0; i < s_aibullets.size(); i++)
+		{
+			SDL_FRect bPos = s_aibullets[i]->m_dst;
+			if (COMA::AABBCheck(tPos, bPos))
+			{
+				cout << "change state to lose" << endl;
+				m_pSound = Mix_LoadWAV("audio/Button.wav");
+				Mix_PlayChannel(-1, m_pSound, 0);
+				delete s_aibullets[i];
+				s_aibullets[i] = nullptr;
+				s_aibullets.erase(s_aibullets.begin() + i);
+				s_aibullets.shrink_to_fit();
+				m_turrets.clear();
+				m_turrets.shrink_to_fit();
+				s_bullets.clear();
+				s_bullets.shrink_to_fit();
+				STMA::ChangeState(new LoseState());
+				break;
+			}
+		}
+	}
 
-	//			m_turrets.clear();
-	//			m_turrets.shrink_to_fit();
-	//			s_bullets.clear();
-	//			s_bullets.shrink_to_fit();
-	//			STMA::ChangeState(new LoseState());*/
-	//			break;
-	//		}
-	//	}
-	//}
-
-	// 
-
+	 
 
 
 
 
 
-	////PLAYER
-	////player bullet with wall
 
-	//for (unsigned i = 0; i < m_turrets.size(); i++)
-	//{
-	//	SDL_Point tPos = { m_turrets[i]->GetPos().x, m_turrets[i]->GetPos().y };
-	//	for (unsigned i = 0; i < s_bullets.size(); i++)
-	//	{
-	//		if (s_bullets[i]->m_dst.x > WIDTH)
-	//		{
-	//			cout << "player bullet delete by wall" << s_bullets[i]->m_dst.x << endl;
-	//			delete s_bullets[i];
-	//			s_bullets[i] = nullptr;
-	//			s_bullets.erase(s_bullets.begin() + i);
-	//			s_bullets.shrink_to_fit();
-	//			break;
-	//		}
-	//	}
-	//}
+	//PLAYER
+	//player bullet with wall
 
-	////player bullet with enemy
-	//for (int e = 0; e < s_enemies.size(); e++)
-	//{
-	//	SDL_Rect ePos = s_enemies[e]->m_dst;
-	//	for (int b= 0; b < s_bullets.size(); b++)
-	//	{
-	//		SDL_FRect bPos = s_bullets[b]->m_dst;
-	//		if(COMA::AABBCheck(ePos, bPos))
-	//		{
-	//			cout << "you killed one enemy......" << endl;
-	//			delete s_enemies[e];
-	//			s_enemies[e] = (new Enemy({ 1024 ,rand() % (750 - 20), 40, 57 }));
-	//			delete s_bullets[e];
-	//			s_bullets.erase(s_bullets.begin() + e);
-	//			s_bullets.shrink_to_fit();
-	//			killCount++;
-	//			cout << "kill count: "<< killCount << endl;
-	//			m_pSound = Mix_LoadWAV("audio/died.wav");
-	//			Mix_PlayChannel(-1, m_pSound, 0);
-	//			break;
-	//			
-	//		}
-	//	}
-	//}
+	for (unsigned i = 0; i < m_turrets.size(); i++)
+	{
+		SDL_Point tPos = { m_turrets[i]->GetPos().x, m_turrets[i]->GetPos().y };
+		for (unsigned i = 0; i < s_bullets.size(); i++)
+		{
+			if (s_bullets[i]->m_dst.x > WIDTH)
+			{
+				cout << "player bullet delete by wall" << s_bullets[i]->m_dst.x << endl;
+				delete s_bullets[i];
+				s_bullets[i] = nullptr;
+				s_bullets.erase(s_bullets.begin() + i);
+				s_bullets.shrink_to_fit();
+				break;
+			}
+		}
+	}
+
+	//player bullet with enemy
+	for (int e = 0; e < s_enemies.size(); e++)
+	{
+		SDL_Rect ePos = s_enemies[e]->m_dst;
+		for (int b= 0; b < s_bullets.size(); b++)
+		{
+			SDL_FRect bPos = s_bullets[b]->m_dst;
+			if(COMA::AABBCheck(ePos, bPos))
+			{
+				cout << "you killed one enemy......" << endl;
+				delete s_enemies[e];
+				s_enemies[e] = (new Enemy({ 1024 ,rand() % (750 - 20), 40, 57 }));
+				delete s_bullets[e];
+				s_bullets.erase(s_bullets.begin() + e);
+				s_bullets.shrink_to_fit();
+				killCount++;
+				cout << "kill count: "<< killCount << endl;
+				m_pSound = Mix_LoadWAV("audio/died.wav");
+				Mix_PlayChannel(-1, m_pSound, 0);
+				break;
+				
+			}
+		}
+	}
 
 
 

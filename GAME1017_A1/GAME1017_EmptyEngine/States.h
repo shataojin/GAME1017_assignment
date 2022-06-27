@@ -55,6 +55,7 @@ private:
 	Mix_Chunk* m_pSound;
 	SDL_Texture* m_pBGText;
 	SDL_Renderer* m_pRenderer;
+	std::vector<Button*> m_button;
 	std::vector<Turret*> m_turrets;
 	static std::vector<Enemy*> s_enemies;
 	static std::vector<Bullet*> s_bullets;
