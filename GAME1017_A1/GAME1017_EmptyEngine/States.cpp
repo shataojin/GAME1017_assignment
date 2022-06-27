@@ -127,10 +127,10 @@ void GameState::Update()
 	{
 		STMA::PushState(new PauseState());
 	}
-	if (EVMA::KeyPressed(SDL_SCANCODE_T))
+	/*if (EVMA::KeyPressed(SDL_SCANCODE_T))
 	{
 		m_turrets.push_back(new Turret({ 50,250,100,100 }));
-	}
+	}*/
 	if (EVMA::KeyPressed(SDL_SCANCODE_C))
 	{
 		ClearTurrets();
@@ -143,6 +143,9 @@ void GameState::Update()
 		s_enemies[i]->Update();
 	for (unsigned i = 0; i < s_bullets.size(); i++)
 		s_bullets[i]->Update();
+	for (unsigned i = 0; i < s_aibullets.size(); i++)
+		s_aibullets[i]->Update();
+
 
 	// Cleanup bullets and enemies that go off screen.
 
@@ -172,50 +175,116 @@ void GameState::Update()
 	//}
 
 
-	////DONE NEW ENEMY
-	//for (unsigned i = 0; i < s_enemies.size(); i++)
-	//{
-	//	if (s_enemies[i]->GetPos().y > HEIGHT )
-	//	{
-	//		cout << "Enemy delete by wall"<<s_enemies[i]->GetPos().y << endl;
-	//		delete s_enemies[i];
-	//		s_enemies[i]=(new Enemy({ rand() % (1024 - 40), -57, 40, 57 }));
-	//	}
-	//}
-	// 
-	// //bullet done
-	//SDL_Point cPos = GameState::Enemies()[0]->GetPos();
-	//for (unsigned i = 0; i < m_turrets.size(); i++)
-	//{
-	//	SDL_Point tPos = { m_turrets[i]->GetPos().x, m_turrets[i]->GetPos().y };
-	//	for (unsigned i = 0; i < s_bullets.size(); i++)
-	//	{
-	//		if (s_bullets[i]->m_dst.x > WIDTH || s_bullets[i]->m_dst.x <0 || s_bullets[i]->m_dst.y >WIDTH || s_bullets[i]->m_dst.y < 0)
-	//		{
-	//			delete s_bullets[i];
-	//			s_bullets[i] = (new Bullet({ (float)(tPos.x - 2), (float)(tPos.y + 2), (float)4, (float)4 }, cPos.x, cPos.y));
-	//		}
-	//	}
-	//}
+
+	//AI
+	//with wall
+	for (unsigned i = 0; i < s_enemies.size(); i++)
+	{
+		if (s_enemies[i]->GetPos().x <-20 )
+		{
+			cout << "Enemy delete by wall"<<s_enemies[i]->GetPos().y << endl;
+			delete s_enemies[i];
+			s_enemies[i]=(new Enemy({ 1048 ,rand() % (750 - 20), 40, 57 }));
+		}
+	}
+
+	//ai with player
+	for (unsigned i = 0; i < m_turrets.size(); i++)
+	{
+		SDL_Rect tPos = m_turrets[i]->m_dst;
+		for (unsigned i = 0; i < s_enemies.size(); i++)
+		{
+			SDL_Rect ePos = s_enemies[i]->m_dst;
+			if (COMA::AABBCheck(ePos, tPos))
+			{
+				cout << "change state to lose" << endl;
+				/*STMA::ChangeState(new LoseState());*/
+				break;
+			}
+			
+		}
+	}
 
 
-	//for (int e = 0; e < s_enemies.size(); e++)
-	//{
-	//	SDL_Rect ePos = s_enemies[e]->m_dst;
-	//	for (int b= 0; b < s_bullets.size(); b++)
-	//	{
-	//		SDL_FRect bPos = s_bullets[b]->m_dst;
-	//		if(COMA::AABBCheck(ePos, bPos))
-	//		{
-	//			cout << "you killed one enemy......" << endl;
-	//			delete s_enemies[e];
-	//			s_enemies[e] = (new Enemy({ rand() % (1024 - 40), -57, 40, 57 }));
-	//			delete s_bullets[b];
-	//			s_bullets[b] = (new Bullet({ (float)(bPos.x - 2), (float)(bPos.y + 2), (float)4, (float)4 }, cPos.x, cPos.y));
-	//			
-	//		}
-	//	}
-	//}
+	// ai bullet with wall
+
+	for (unsigned i = 0; i < s_aibullets.size(); i++)
+	{
+		if (s_aibullets[i]->m_dst.x < 0)
+		{
+			cout << "player bullet delete by wall" << s_aibullets[i]->m_dst.x << endl;
+			delete s_aibullets[i];
+			s_aibullets[i] = nullptr;
+			s_aibullets.erase(s_aibullets.begin() + i);
+			s_aibullets.shrink_to_fit();
+			break;
+		}
+	}
+
+	// ai bullet with player
+
+	for (unsigned i = 0; i < m_turrets.size(); i++)
+	{
+		SDL_Rect tPos = m_turrets[i]->m_dst;
+		for (unsigned i = 0; i < s_aibullets.size(); i++)
+		{
+			SDL_FRect bPos = s_aibullets[i]->m_dst;
+			if (COMA::AABBCheck(tPos, bPos))
+			{
+				cout << "change state to lose" << endl;
+				/*STMA::ChangeState(new LoseState());*/
+				break;
+			}
+		}
+	}
+
+	 
+
+
+
+
+
+
+	//PLAYER
+	//player bullet with wall
+
+	for (unsigned i = 0; i < m_turrets.size(); i++)
+	{
+		SDL_Point tPos = { m_turrets[i]->GetPos().x, m_turrets[i]->GetPos().y };
+		for (unsigned i = 0; i < s_bullets.size(); i++)
+		{
+			if (s_bullets[i]->m_dst.x > WIDTH)
+			{
+				cout << "player bullet delete by wall" << s_bullets[i]->m_dst.x << endl;
+				delete s_bullets[i];
+				s_bullets[i] = nullptr;
+				s_bullets.erase(s_bullets.begin() + i);
+				s_bullets.shrink_to_fit();
+				break;
+			}
+		}
+	}
+
+	//player bullet with enemy
+	for (int e = 0; e < s_enemies.size(); e++)
+	{
+		SDL_Rect ePos = s_enemies[e]->m_dst;
+		for (int b= 0; b < s_bullets.size(); b++)
+		{
+			SDL_FRect bPos = s_bullets[b]->m_dst;
+			if(COMA::AABBCheck(ePos, bPos))
+			{
+				cout << "you killed one enemy......" << endl;
+				delete s_enemies[e];
+				s_enemies[e] = (new Enemy({ 1048 ,rand() % (750 - 20), 40, 57 }));
+				/*delete s_bullets[e];
+				s_bullets[e] = nullptr;
+				s_bullets.shrink_to_fit();*/
+				break;
+				
+			}
+		}
+	}
 
 
 
@@ -232,11 +301,10 @@ void GameState::Render()
 		s_enemies[i]->Render();
 	for (unsigned i = 0; i < s_bullets.size(); i++)
 		s_bullets[i]->Render();
+	for (unsigned i = 0; i < s_aibullets.size(); i++)
+		s_aibullets[i]->Render();
 
-	SDL_Rect spawnBox = { 50, 618, 100, 100 };
-	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 255, 255, 255);
-	SDL_RenderDrawRect(Engine::Instance().GetRenderer(), &spawnBox);
-
+	
 	// This code below prevents SDL_RenderPresent from running twice in one frame.
 	if ( dynamic_cast<GameState*>( STMA::GetStates().back() ) ) // If current state is GameState.
 		State::Render();
@@ -305,3 +373,4 @@ void GameState::Resume()
 // This is how static properties are allocated.
 std::vector<Bullet*> GameState::s_bullets;
 std::vector<Enemy*> GameState::s_enemies;
+std::vector<AiBullet*> GameState::s_aibullets;

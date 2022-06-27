@@ -46,6 +46,7 @@ private:
 	std::vector<Turret*> m_turrets;
 	static std::vector<Enemy*> s_enemies;
 	static std::vector<Bullet*> s_bullets;
+	static std::vector<AiBullet*> s_aibullets;
 	int m_spawnCtr;
 	void ClearTurrets();
 public: // Public methods.
@@ -57,6 +58,6 @@ public: // Public methods.
 	virtual void Resume();
 	static std::vector<Bullet*>& Bullets() { return s_bullets; }
 	static std::vector<Enemy*>& Enemies() { return s_enemies; }
-
+	static std::vector<AiBullet*>& AiBullet() { return s_aibullets; }
 };
 #endif

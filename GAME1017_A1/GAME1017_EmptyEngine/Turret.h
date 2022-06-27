@@ -8,7 +8,7 @@
 class Turret
 {
 private:
-	SDL_Rect m_src, m_dst; // Set x and y of m_dst to/from XML.
+	
 	SDL_Point m_startPos; // Don't need this actually.
 	
 	// Firing properties.
@@ -22,7 +22,7 @@ public:
 	void Update();
 	void Render();
 	SDL_Point GetPos() const { return { m_dst.x + m_dst.w / 2, m_dst.y + m_dst.h / 2 }; }
-
+	SDL_Rect m_src, m_dst; // Set x and y of m_dst to/from XML.
 	bool TdeletME = false;
 };
 

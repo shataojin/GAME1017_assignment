@@ -8,7 +8,7 @@
 
 int Turret::s_coolDown = 120;
 
-Turret::Turret(SDL_Rect dst) :m_dst(dst), m_src({ 0,0,100,100 }), m_angle(0.0), m_hasTarget(false), m_fireCtr(0)
+Turret::Turret(SDL_Rect dst) :m_dst(dst), m_src({ 0,0,100,100 }), m_angle(0.0),  m_fireCtr(0)
 {
 	m_startPos = { dst.x, dst.y };
 }
@@ -26,6 +26,8 @@ void Turret::Update()
 	if (EVMA::MousePressed(1))
 	{
 		GameState::Bullets().push_back(new Bullet({ (float)(tPos.x - 2), (float)(tPos.y + 2), (float)4, (float)4 }, 5, 0));
+		GameState::Bullets().shrink_to_fit();
+		cout << "new bullet vector capacity: " << GameState::Bullets().capacity() << endl;
 	}
 
 

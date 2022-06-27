@@ -3,7 +3,7 @@
 #define _ENEMY_H_
 
 #include <SDL.h>
-#include "Bullet.h"
+#include "AI_Bullet.h"
 class Enemy
 {
 private:
