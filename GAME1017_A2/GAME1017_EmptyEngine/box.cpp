@@ -104,5 +104,6 @@ void Box::Update()
 }
 void Box::Render()
 {
-	SDL_RenderCopyF(Engine::Instance().GetRenderer(), TEMA::GetTexture("bs"), GetSrc(), GetDst());
+	SDL_RenderCopyF(Engine::Instance().GetRenderer(), TEMA::GetTexture("ss"), GetSrc(), GetDst());
+
 }

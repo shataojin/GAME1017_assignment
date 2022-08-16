@@ -64,6 +64,8 @@ TitleState::TitleState(){}
 
 void TitleState::Enter()
 {
+
+	SOMA::PlayMusic("title", -1, 2000);
 	TEMA::Load("Img/x.jpg", "background");
 	m_objects.push_back(pair<string, GameObject*>("background",
 		new Image({ 0, 0, 1024, 768 }, { 0, 0, 1024, 768 }, "background")));
@@ -73,10 +75,11 @@ void TitleState::Enter()
 	TEMA::Load("Img/exit.png", "exit");
 	m_objects.push_back(pair<string, GameObject*>("exit",
 		new ExitButton({ 0, 0, 400, 100 }, { 412, 550, 200, 50 }, "exit")));
-	SOMA::Load("Aud/FastestGun.mp3", "title", SOUND_MUSIC);
-	SOMA::AllocateChannels(16);
-	SOMA::SetMusicVolume(8);
-	SOMA::PlayMusic("title", -1, 2000);
+	SOMA::Load("Aud/died.wav", "exit", SOUND_SFX);
+	SOMA::Load("Aud/Bgm_2.mp3", "gaem", SOUND_MUSIC);
+	SOMA::SetSoundVolume(16);
+	SOMA::SetMusicVolume(32);
+	SOMA::PlayMusic("gaem", -1, 2000);
 
 }
 
@@ -121,6 +124,10 @@ GameState::GameState(){}
 
 void GameState::Enter() // Used for initialization.
 {
+	SOMA::Load("Aud/Bgm_2.mp3", "gaem", SOUND_MUSIC);
+	SOMA::SetSoundVolume(16);
+	SOMA::SetMusicVolume(32);
+	SOMA::PlayMusic("gaem", -1, 2000);
 
 	XMLDocument xmlDoc;
 	xmlDoc.LoadFile("SavedObjects.xml");
@@ -143,27 +150,25 @@ void GameState::Enter() // Used for initialization.
 	TEMA::Load("Img/BG.png", "bg");
 	m_vec.reserve(10);
 	// Backgrounds.
-	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 0,0,1024,768 }, { 0,0,1024,768 }, 1)));
-	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 0,0,1024,768 }, { 1024,0,1024,768 }, 1)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 0,0,600,768 }, { 0,0,1024,768 }, 1)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 0,0,600,768 }, { 1024,0,1024,768 }, 1)));
 	// Midgrounds.
-	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,0,256,512 }, { 0,0,256,512 }, 2)));
-	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,0,256,512 }, { 256,0,256,512 }, 2)));
-	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,0,256,512 }, { 512,0,256,512 }, 2)));
-	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,0,256,512 }, { 768,0,256,512 }, 2)));
-	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,0,256,512 }, { 1024,0,256,512 }, 2)));
-	// Foregrounds.
-	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,512,521,256 }, { 0,512,512,256 }, 4)));
-	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,512,521,256 }, { 512,512,512,256 }, 4)));
-	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,512,521,256 }, { 1024,512,512,256 }, 4)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 700,0,225,300}, { 0,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 700,0,225,300}, { 256,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 700,0,225,300}, { 512,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 700,0,225,300}, { 768,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 700,0,225,300}, { 1024,0,256,512 }, 2)));
+	//// Foregrounds.
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 700,320,925,462 }, { 0,512,512,256 }, 4)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 700,320,925,462 }, { 512,512,512,256 }, 4)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 700,320,925,462 }, { 1024,512,512,256 }, 4)));
 
 
 	TEMA::Load("Img/Player.png", "player");
 	m_objects.push_back(pair<string, GameObject*>("player", new PlatformPlayer({ 0,0,128,128 }, { 299,480,64,64 })));
 
-	TEMA::Load("Img/BG.png", "ss");
-	/*m_Sbox.push_back(pair<string, GameObject*>("ss", new Box({ 0,0,128,128 }, { WIDTH + 50,420 ,64,64 })));*/
-
-	TEMA::Load("Img/BG.png", "bs");
+	TEMA::Load("Img/ss.png", "ss");
+	TEMA::Load("Img/button.png", "bs");
 	//m_Bbox.push_back(pair<string, GameObject*>("bs", new Box({ 0,0,128,128 }, { WIDTH + 50,0 ,64,300 })));
 
 	/*m_label.push_back(pair<string, GameObject*>("Label", new Label("Label",300,300,"works!!!!plz")));*/
@@ -180,7 +185,7 @@ void GameState::Update()
 		{
 			m_SspawnCtr = 1;
 			ScountNumber = (1 + rand() % 200) * 30;
-			m_Sbox.push_back(pair<string, GameObject*>("ss", new Box({ 0,0,128,128 }, { WIDTH + 50,490 ,64,64 })));
+			m_Sbox.push_back(pair<string, GameObject*>("ss", new Box({ 0,0,667,462 }, { WIDTH + 200,490 ,64,64 })));
 			cout << ScountNumber << endl;
 		}
 		if (timercounter++ % counter == 0)
@@ -216,7 +221,7 @@ void GameState::Update()
 		{
 			m_BspawnCtr = 1;
 			BcountNumber = (1 + rand() % 200) * 50;
-			m_Bbox.push_back(pair<string, GameObject*>("bs", new Box({ 0,0,128,128 }, { WIDTH + 50,0 ,64,341 })));
+			m_Bbox.push_back(pair<string, GameObject*>("bs", new Box({ 750,0,200,700 }, { WIDTH + 10,0 ,64,341 })));
 			cout << BcountNumber << endl;
 		}
 	
@@ -279,7 +284,7 @@ void GameState::Update()
 		if (COMA::AABBCheck(*pBound, ePos))
 		{
 				cout << "player died" << endl;
-				
+				SOMA::PlaySound("exit");
 				STMA::ChangeState(new LoseState());	
 		}
 
@@ -291,6 +296,7 @@ void GameState::Update()
 
 		if (COMA::AABBCheck(*pBound, ePos))
 		{
+			SOMA::PlaySound("exit");
 			cout << "player died" << endl;
 			STMA::ChangeState(new LoseState());	
 		}
@@ -443,6 +449,8 @@ void GameState::Exit()
 	m_Bbox.shrink_to_fit();
 
 	
+	SOMA::StopSound();
+	SOMA::StopMusic();
 
 }
 
