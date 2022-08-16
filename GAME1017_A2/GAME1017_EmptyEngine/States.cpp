@@ -45,8 +45,7 @@ auto State::GetIt(const std::string& s)
 
 
 
-///////remember change pics
-//////quit game not working
+///////remember change pics,quit game not working
 
 
 // Begin TitleState
@@ -268,3 +267,58 @@ void PauseState::Exit()
 	
 }
 // End PauseState
+
+
+/////change picture and add contion with paly scene
+
+
+//Begin LoseState
+LoseState::LoseState() {}
+
+void LoseState::Enter()
+{
+	TEMA::Load("Img/x.jpg", "background");
+	m_objects.push_back(pair<string, GameObject*>("background",
+		new Image({ 0, 0, 1024, 768 }, { 0, 0, 1024, 768 }, "background")));
+	TEMA::Load("Img/button.png", "play");
+	m_objects.push_back(pair<string, GameObject*>("play",
+		new PlayButton({ 0, 0, 400, 100 }, { 412, 450, 200, 50 }, "play")));
+	TEMA::Load("Img/exit.png", "exit");
+	m_objects.push_back(pair<string, GameObject*>("exit",
+		new ExitButton({ 0, 0, 400, 100 }, { 412, 550, 200, 50 }, "exit")));
+}
+
+void LoseState::Update()
+{
+	for (auto const& i : m_objects)
+	{
+		i.second->Update();
+		if (STMA::StateChanging()) return;
+
+	}
+}
+
+void LoseState::Render()
+{
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 64, 0, 16, 255);
+	SDL_RenderClear(Engine::Instance().GetRenderer());
+	for (auto const& i : m_objects)
+		i.second->Render();
+	State::Render();
+}
+
+void LoseState::Exit()
+{
+	TEMA::Unload("background");
+	TEMA::Unload("play");
+	TEMA::Unload("exit");
+	for (auto& i : m_objects)
+	{
+		delete i.second;
+		i.second = nullptr;
+	}
+	m_objects.clear();
+	m_objects.shrink_to_fit();
+}
+
+// End LoseState
