@@ -140,6 +140,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Background.cpp" />
+    <ClCompile Include="Bound.cpp" />
     <ClCompile Include="Button3.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -155,6 +157,8 @@
     <ClCompile Include="TiledLevel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Background.h" />
+    <ClInclude Include="Bound.h" />
     <ClInclude Include="Button3.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Engine.h" />

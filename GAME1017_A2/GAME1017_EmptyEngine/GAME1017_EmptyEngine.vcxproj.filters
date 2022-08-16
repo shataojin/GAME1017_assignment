@@ -58,6 +58,12 @@
     <ClCompile Include="PlatformPlayer.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Bound.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -97,6 +103,12 @@
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="PlatformPlayer.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Bound.h">
       <Filter>Objects</Filter>
     </ClInclude>
   </ItemGroup>

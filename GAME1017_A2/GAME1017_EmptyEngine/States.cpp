@@ -8,7 +8,7 @@
 #include "Primitives.h"
 #include"PlatformPlayer.h"
 #include "Button3.h"
-
+#include"Background.h"
 #include <iostream>
 using namespace std;
 
@@ -104,71 +104,96 @@ GameState::GameState(){}
 
 void GameState::Enter() // Used for initialization.
 {
-	TEMA::Load("Img/Tiles.png", "tiles");
+	TEMA::Load("Img/BG.png", "bg");
+	m_vec.reserve(10);
+	// Backgrounds.
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({0,0,1024,768}, {0,0,1024,768}, 1)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 0,0,1024,768 }, { 1024,0,1024,768 }, 1)));
+	// Midgrounds.
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 0,0,256,512 }, 3)));
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 256,0,256,512 }, 3)));
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 512,0,256,512 }, 3)));
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 768,0,256,512 }, 3)));
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 1024,0,256,512 }, 3)));
+
+
+	// Foregrounds.
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,512,521,256 }, { 0,512,512,256 }, 4)));
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,512,521,256 }, { 512,512,512,256 }, 4)));
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,512,521,256 }, { 1024,512,512,256 }, 4)));
+	/*TEMA::Load("Img/Tiles.png", "tiles");
 	TEMA::Load("Img/Player.png", "player");
 	m_objects.push_back(pair<string, GameObject*>("level", new TiledLevel(
 		24, 32, 32, 32, "Dat/Tiledata.txt", "Dat/Level1.txt", "tiles")));
 	m_objects.push_back(pair<string, GameObject*>("player", new PlatformPlayer(
-		{ 0,0,128,128 }, { 299,480,64,64 })));
+		{ 0,0,128,128 }, { 299,480,64,64 })));*/
 	
 }
 
 void GameState::Update()
 {
 
-	for (auto const& i : m_objects)
-	{
-		i.second->Update();
-		if (STMA::StateChanging()) return;
-	}
 
-	if (EVMA::KeyPressed(SDL_SCANCODE_P))
-	{
-		STMA::PushState(new PauseState()); // Add new PauseState
-	}
+	for (auto const& i : m_vec)
+{
+	i.second->Update();
+}
 
-	//check collision
-	PlatformPlayer* pObj = static_cast<PlatformPlayer*>(GetGo("player"));
-	SDL_FRect* pBound = pObj->GetDst();
-	TiledLevel* pLevel = static_cast<TiledLevel*>(GetGo("level"));
+	//for (auto const& i : m_objects)
+	//{
+	//	i.second->Update();
+	//	if (STMA::StateChanging()) return;
+	//}
 
-	for (unsigned int i = 0; i < pLevel->GetObstacles().size(); i++)
-	{
-		SDL_FRect* pTile = pLevel->GetObstacles()[i]->GetDst();
-		if (COMA::AABBCheck(*pBound, *pTile))
-		{
-			if ((pBound->y + pBound->h) - (float)pObj->GetVelY() <= pTile->y)
-			{
-				pObj->StopY();
-				pObj->SetY(pTile->y - pBound->h);
-				pObj->SetGrounded(true);
-			}
+	//if (EVMA::KeyPressed(SDL_SCANCODE_P))
+	//{
+	//	STMA::PushState(new PauseState()); // Add new PauseState
+	//}
 
-			else if (pBound->y - (float)pObj->GetVelY() >= pTile->y + pTile->h)
-			{
-				pObj->StopY();
-				pObj->SetY(pTile->y + pBound->h);
-			}
-			else if ((pBound->x + pBound->w) - (float)pObj->GetVelX() <= pTile->x)
-			{
-				pObj->StopX();
-				pObj->SetX(pTile->x - pBound->w);
-			}
-			else if (pBound->x - (float)pObj->GetVelX() >= pTile->x + pTile->w)
-			{
-				pObj->StopX();
-				pObj->SetX(pTile->x - pBound->w);
-			}
-		}
-	}
+	////check collision
+	//PlatformPlayer* pObj = static_cast<PlatformPlayer*>(GetGo("player"));
+	//SDL_FRect* pBound = pObj->GetDst();
+	//TiledLevel* pLevel = static_cast<TiledLevel*>(GetGo("level"));
+
+	//for (unsigned int i = 0; i < pLevel->GetObstacles().size(); i++)
+	//{
+	//	SDL_FRect* pTile = pLevel->GetObstacles()[i]->GetDst();
+	//	if (COMA::AABBCheck(*pBound, *pTile))
+	//	{
+	//		if ((pBound->y + pBound->h) - (float)pObj->GetVelY() <= pTile->y)
+	//		{
+	//			pObj->StopY();
+	//			pObj->SetY(pTile->y - pBound->h);
+	//			pObj->SetGrounded(true);
+	//		}
+
+	//		else if (pBound->y - (float)pObj->GetVelY() >= pTile->y + pTile->h)
+	//		{
+	//			pObj->StopY();
+	//			pObj->SetY(pTile->y + pBound->h);
+	//		}
+	//		else if ((pBound->x + pBound->w) - (float)pObj->GetVelX() <= pTile->x)
+	//		{
+	//			pObj->StopX();
+	//			pObj->SetX(pTile->x - pBound->w);
+	//		}
+	//		else if (pBound->x - (float)pObj->GetVelX() >= pTile->x + pTile->w)
+	//		{
+	//			pObj->StopX();
+	//			pObj->SetX(pTile->x - pBound->w);
+	//		}
+	//	}
+	//}
 }
 
 void GameState::Render()
 {
-	
+
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
-	for (auto const& i : m_objects)
+	//for (auto const& i : m_objects)
+	//	i.second->Render();
+	for (auto const& i : m_vec)
 		i.second->Render();
 	if ( dynamic_cast<GameState*>(STMA::GetStates().back()) ) 
 		State::Render();
@@ -176,7 +201,16 @@ void GameState::Render()
 
 void GameState::Exit()
 {
-	TEMA::Unload( "tiles");
+	TEMA::Unload( "bg");
+	for (auto& i : m_vec)
+	{
+		delete i.second;
+		i.second = nullptr;
+	}
+	m_vec.clear();
+	m_vec.shrink_to_fit();
+
+	/*TEMA::Unload( "tiles");
 	TEMA::Unload("player");
 	for (auto& i : m_objects)
 	{
@@ -184,7 +218,7 @@ void GameState::Exit()
 		i.second = nullptr;
 	}
 	m_objects.clear();
-	m_objects.shrink_to_fit();
+	m_objects.shrink_to_fit();*/
 }
 
 void GameState::Resume()

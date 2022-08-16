@@ -20,6 +20,7 @@ protected: // Private but inherited
 	State() {} // What does this prevent?
 	vector<std::pair<std::string, GameObject*>> m_objects;
 	vector<std::pair<std::string, GameObject*>> m_objectre;
+	vector<std::pair<std::string, GameObject*>> m_vec;
 };
 
 class TitleState : public State
