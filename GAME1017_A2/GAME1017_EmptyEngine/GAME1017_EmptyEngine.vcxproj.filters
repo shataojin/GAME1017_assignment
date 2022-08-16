@@ -61,7 +61,7 @@
     <ClCompile Include="Background.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Bound.cpp">
+    <ClCompile Include="box.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -108,7 +108,7 @@
     <ClInclude Include="Background.h">
       <Filter>Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Bound.h">
+    <ClInclude Include="box.h">
       <Filter>Objects</Filter>
     </ClInclude>
   </ItemGroup>

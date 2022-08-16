@@ -55,6 +55,7 @@ void StateManager::Quit()
 		delete s_states.back();
 		s_states.back() = nullptr;
 		s_states.pop_back();
+		exit(0);
 	}
 }
 

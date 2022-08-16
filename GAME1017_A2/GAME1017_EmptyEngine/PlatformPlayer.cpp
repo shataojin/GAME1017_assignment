@@ -9,6 +9,8 @@ m_maxVelX(9.0), m_maxVelY(JUMPFORCE), m_grav(GRAVITY), m_drag(0.85)
 {
 	m_accelX = m_accelY = m_velX = m_velY = 0.0;
 	SetAnimation(1, 8, 9);  // Initialize jump animation. 
+	SetAnimation(1, 0, 4);//roling  384
+	SetAnimation(5, 0, 9);//died
 }
 
 void PlatformPlayer::Update()
@@ -29,6 +31,19 @@ void PlatformPlayer::Update()
 			m_isGrounded = false;
 			m_state = STATE_JUMPING;
 			SetAnimation(1, 8, 9, 256);
+		}
+		// Transition to rolling
+		else if ((EVMA::KeyPressed(SDL_SCANCODE_S) && m_isGrounded))
+		{
+			m_state = STATE_ROLLING;
+			SetAnimation(1, 0, 4, 384);
+		}
+		//for test die mode
+		else if (EVMA::KeyPressed(SDL_SCANCODE_G))
+		{
+			m_state = DEAD;
+			m_playerDie = true;
+			SetAnimation(5, 0, 9, 384);
 		}
 		break;
 	case STATE_RUNNING:
@@ -86,20 +101,52 @@ void PlatformPlayer::Update()
 			m_state = STATE_RUNNING;
 			SetAnimation(3, 0, 8, 256);
 		}
-		break;
+		break;	
 
 	case STATE_ROLLING:
-
+		if (EVMA::KeyHeld(SDL_SCANCODE_A))
+		{
+			m_accelX = -1.5;
+			// Set accelX to negative.
+			if (!m_isFacingLeft)
+				m_isFacingLeft = true;
+		}
+		else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+		{
+			m_accelX = 1.5;
+			// Set accelX to positive.
+			if (m_isFacingLeft)
+				m_isFacingLeft = false;
+		}
 		if (EVMA::KeyHeld(SDL_SCANCODE_S))
 		{
-			
+			m_state = STATE_ROLLING;
+			//temport change size
+		/*	GetDst()->h = GetDst()->h / 2;*/
 		}
+		if (!EVMA::KeyHeld(SDL_SCANCODE_S))
+		{
+			m_state = STATE_IDLING;
+			SetAnimation(1, 0, 1, 256); // , 256
+
+		}
+		break;
+
+	case DEAD:
+		if (EVMA::KeyPressed(SDL_SCANCODE_G))
+		{
+			m_playerDie = true;
+			SetAnimation(5, 0, 9, 384);
+		}
+		break;
+
 	}
 	// Player movement. Universal for all states. X-axis first.
 	m_velX += m_accelX;
 	m_velX *= (m_isGrounded ? m_drag : 1.0); // Cheeky deceleration.
 	m_velX = std::min(std::max(m_velX, -m_maxVelX), m_maxVelX);
 	m_dst.x += static_cast<float>(m_velX); // May have to cast to (int)
+	//y-axis
 
 	m_velY += m_accelY + m_grav;
 	m_velY = std::min(std::max(m_velY, -m_maxVelY), m_maxVelY); // (m_grav * 5.0)
@@ -146,6 +193,10 @@ void PlatformPlayer::SetY(float y) { m_dst.y = y; }
 void PlatformPlayer::SetGrounded(bool g) { m_isGrounded = g; }
 
 bool PlatformPlayer::IsGrounded() { return m_isGrounded; }
+
+void PlatformPlayer::SetPlayerDie(bool d) { m_playerDie = d; }
+
+bool PlatformPlayer::IsPlayerDie() { return m_playerDie; }
 
 double PlatformPlayer::GetVelX() { return m_velX; }
 

@@ -50,7 +50,7 @@
 class Box : public SpriteObject
 {
 private:
-	static const int kscollspeed =1;
+	static const int kscollspeed =2;
 	int m_boxNumber = 10;
 	SDL_FRect m_position;
 	Box* m_sprite;

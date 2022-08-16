@@ -23,6 +23,7 @@ private: // private properties.
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
 
+
 private: // private method prototypes.
 	Engine() {} // Prevents instantiation outside class.
 	int Init(const char* title, int xPos, int yPos, int width, int height, int flags);

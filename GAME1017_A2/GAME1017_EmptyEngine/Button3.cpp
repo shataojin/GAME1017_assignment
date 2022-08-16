@@ -4,11 +4,14 @@
 #include "EventManager.h"
 #include "TextureManager.h"
 #include "StateManager.h"
-
+#include "SoundManager.h"
 Button3::Button3(SDL_Rect s, SDL_FRect d, const char* k) :SpriteObject(s, d), m_state(STATE_UP), m_key(k) {}
 
 void Button3::Update()
 {
+	/*SOMA::Load("Aud/Moo1.wav", "play", SOUND_SFX);
+	SOMA::Load("Aud/Moo2.wav", "exit", SOUND_SFX);
+	SOMA::Load("Aud/Fire.wav", "raesume", SOUND_SFX);*/
 	bool col = COMA::PointAABBCheck(EVMA::GetMousePos(), m_dst);
 	EVMA::SetCursor(col?SDL_SYSTEM_CURSOR_HAND:SDL_SYSTEM_CURSOR_ARROW);
 	switch (m_state)
@@ -46,13 +49,16 @@ PlayButton::PlayButton(SDL_Rect s, SDL_FRect d, const char* k) :Button3(s, d, k)
 
 void PlayButton::Execute()
 {
+	SOMA::PlaySound("play");
 	STMA::ChangeState(new GameState());
+	
 }
 
 ExitButton::ExitButton(SDL_Rect s, SDL_FRect d, const char* k) :Button3(s, d, k) {}
 
 void ExitButton::Execute()
 {
+	SOMA::PlaySound("exit");
 	STMA::Quit();
 }
 
@@ -60,7 +66,9 @@ RaesumeButton::RaesumeButton(SDL_Rect s, SDL_FRect d, const char* k) :Button3(s,
 
 void RaesumeButton::Execute()
 {
+	SOMA::PlaySound("raesume");
 	STMA::PopState();
+
 }
 
 

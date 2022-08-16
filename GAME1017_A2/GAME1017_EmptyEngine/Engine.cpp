@@ -8,6 +8,7 @@
 
 int Engine::Init(const char* title, int xPos, int yPos, int width, int height, int flags)
 {
+
 	cout << "Initializing engine..." << endl;
 	srand((unsigned)time(NULL));
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) // If initialization is okay...

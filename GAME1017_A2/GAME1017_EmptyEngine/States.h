@@ -16,11 +16,25 @@ public:
 	virtual ~State() {} // or = default;
 	GameObject* GetGo(const std::string& s);
 	auto GetIt(const std::string& s);
+	int m_BboxNumber = 10;
+	int m_BspawnCtr;
+	int m_Btimer=1;
+	int BcountNumber = 300;
+	int m_SboxNumber = 10;
+	int m_SspawnCtr;
+	int m_Stimer = 1;
+	int ScountNumber = 180;
+	int dieTimer = 600;
+	int  sec = 1;
+
+
 protected: // Private but inherited
 	State() {} // What does this prevent?
 	vector<std::pair<std::string, GameObject*>> m_objects;
 	vector<std::pair<std::string, GameObject*>> m_objectre;
 	vector<std::pair<std::string, GameObject*>> m_vec;
+	vector<std::pair<std::string, GameObject*>> m_Sbox;
+	vector<std::pair<std::string, GameObject*>> m_Bbox;
 };
 
 class TitleState : public State
@@ -42,6 +56,7 @@ public:
 	virtual void Render();
 	virtual void Exit();
 	virtual void Resume();
+	virtual void deadtimer();
 };
 
 class PauseState : public State

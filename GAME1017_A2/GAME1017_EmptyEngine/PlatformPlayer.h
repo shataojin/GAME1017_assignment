@@ -4,9 +4,9 @@
 
 #include "GameObject.h"
 #define GRAVITY 2.0
-#define JUMPFORCE 25.0
+#define JUMPFORCE 22.0
 // Define gravity and jump force
-enum PlayerState { STATE_IDLING, STATE_RUNNING, STATE_JUMPING, STATE_ROLLING};
+enum PlayerState { STATE_IDLING, STATE_RUNNING, STATE_JUMPING, STATE_ROLLING,DEAD};
 // Create enum for player animation state
 
 class PlatformPlayer : public AnimatedSpriteObject
@@ -25,12 +25,14 @@ public:
 	void SetX(float x);
 	void SetY(float y);
 	void SetGrounded(bool g);
+	void SetPlayerDie(bool d);
+	bool IsPlayerDie();
 	bool IsGrounded();
 	double GetVelX();
 	double GetVelY();
 
 private:
-	bool m_isGrounded, m_isFacingLeft;
+	bool m_isGrounded, m_isFacingLeft,m_playerDie;
 	double m_accelX, m_accelY,
 		m_velX, m_velY,
 		m_maxVelX, m_maxVelY,

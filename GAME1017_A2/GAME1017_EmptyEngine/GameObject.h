@@ -15,8 +15,9 @@ public: // Methods.
 	SDL_FRect* GetDst() { return &m_dst; }
 	const bool GetEnabled() const { return m_enabled; }
 	void SetEnabled(const bool e) { m_enabled = e; }
+	SDL_FRect m_dst; 
 protected: // Attributes.
-	SDL_FRect m_dst; // Essentially the position/scale(ish).
+/*	SDL_FRect m_dst; */// Essentially the position/scale(ish).
 	bool m_enabled;
 protected: // Methods.
 	GameObject() :m_dst({ 0,0,0,0 }), m_enabled(true) {}

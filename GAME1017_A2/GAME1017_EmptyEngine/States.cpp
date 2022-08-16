@@ -9,7 +9,11 @@
 #include"PlatformPlayer.h"
 #include "Button3.h"
 #include"Background.h"
+#include"Box.h"
 #include <iostream>
+
+#include <stdio.h>
+#include <time.h>
 using namespace std;
 
 void State::Render()
@@ -62,6 +66,10 @@ void TitleState::Enter()
 	TEMA::Load("Img/exit.png", "exit");
 	m_objects.push_back(pair<string, GameObject*>("exit",
 		new ExitButton({ 0, 0, 400, 100 }, { 412, 550, 200, 50 }, "exit")));
+	SOMA::Load("Aud/FastestGun.mp3", "title", SOUND_MUSIC);
+	SOMA::AllocateChannels(16);
+	SOMA::SetMusicVolume(8);
+	SOMA::PlayMusic("title", -1, 2000);
 
 }
 
@@ -86,6 +94,8 @@ void TitleState::Render()
 
 void TitleState::Exit()
 {
+	SOMA::StopMusic();
+	SOMA::Unload("title", SOUND_MUSIC);
 	TEMA::Unload("background");
 	TEMA::Unload("play");
 	TEMA::Unload("exit");
@@ -104,51 +114,191 @@ GameState::GameState(){}
 
 void GameState::Enter() // Used for initialization.
 {
+
+
 	TEMA::Load("Img/BG.png", "bg");
 	m_vec.reserve(10);
 	// Backgrounds.
 	m_vec.push_back(pair<string, GameObject*>("bg",new Background({0,0,1024,768}, {0,0,1024,768}, 1)));
 	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 0,0,1024,768 }, { 1024,0,1024,768 }, 1)));
 	// Midgrounds.
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 0,0,256,512 }, 3)));
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 256,0,256,512 }, 3)));
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 512,0,256,512 }, 3)));
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 768,0,256,512 }, 3)));
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 1024,0,256,512 }, 3)));
-
-
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 0,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 256,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 512,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 768,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 1024,0,256,512 }, 2)));
 	// Foregrounds.
 	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,512,521,256 }, { 0,512,512,256 }, 4)));
 	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,512,521,256 }, { 512,512,512,256 }, 4)));
 	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,512,521,256 }, { 1024,512,512,256 }, 4)));
-	/*TEMA::Load("Img/Tiles.png", "tiles");
+
+
 	TEMA::Load("Img/Player.png", "player");
-	m_objects.push_back(pair<string, GameObject*>("level", new TiledLevel(
-		24, 32, 32, 32, "Dat/Tiledata.txt", "Dat/Level1.txt", "tiles")));
-	m_objects.push_back(pair<string, GameObject*>("player", new PlatformPlayer(
-		{ 0,0,128,128 }, { 299,480,64,64 })));*/
+	m_objects.push_back(pair<string, GameObject*>("player", new PlatformPlayer({ 0,0,128,128 }, { 299,480,64,64 })));
+
+	TEMA::Load("Img/BG.png", "ss");
+	/*m_Sbox.push_back(pair<string, GameObject*>("ss", new Box({ 0,0,128,128 }, { WIDTH + 50,420 ,64,64 })));*/
+
+	TEMA::Load("Img/BG.png", "bs");
+	//m_Bbox.push_back(pair<string, GameObject*>("bs", new Box({ 0,0,128,128 }, { WIDTH + 50,0 ,64,300 })));
 	
 }
 
 void GameState::Update()
 {
+	
+	m_Sbox.reserve(m_SboxNumber);
+	for (int i = 0; i < m_SboxNumber; i++)
+	{
+		if (m_SspawnCtr++ % ScountNumber == 0)
 
+		{
+			m_SspawnCtr = 1;
+			ScountNumber = (1 + rand() % 200) * 30;
+			m_Sbox.push_back(pair<string, GameObject*>("ss", new Box({ 0,0,128,128 }, { WIDTH + 50,485 ,64,64 })));
+			cout << ScountNumber << endl;
+		}
+
+	}
+	for (auto const& i : m_Sbox)
+	{
+		for (size_t i = 0; i < m_Sbox.size(); i++)
+		{
+			m_Sbox[i].second->Update();
+
+			if (m_Sbox[0].second != nullptr && m_Sbox[0].second->GetDst()->x <= -WIDTH)
+			{
+
+				delete m_Sbox[0].second;
+				m_Sbox[0].second = nullptr;
+				m_Sbox.erase(m_Sbox.begin());
+
+			}
+		}
+	}
+
+
+	m_Bbox.reserve(m_BboxNumber);
+	for (int i = 0; i < m_BboxNumber; i++)
+	{
+		if (m_BspawnCtr++ % BcountNumber == 0)
+
+		{
+			m_BspawnCtr = 1;
+			BcountNumber = (1 + rand() % 200) * 40;
+			m_Bbox.push_back(pair<string, GameObject*>("bs", new Box({ 0,0,128,128 }, { WIDTH + 50,0 ,64,342 })));
+			cout << BcountNumber << endl;
+		}
+
+	}
+	for (auto const& i : m_Bbox)
+	{
+		for (size_t i = 0; i < m_Bbox.size(); i++)
+		{
+			m_Bbox[i].second->Update();
+
+			if (m_Bbox[0].second != nullptr && m_Bbox[0].second->GetDst()->x <= -WIDTH)
+			{
+
+				delete m_Bbox[0].second;
+				m_Bbox[0].second = nullptr;
+				m_Bbox.erase(m_Bbox.begin());
+
+			}
+		}
+	}
+
+	if (BcountNumber!=0 && ScountNumber!=0 && BcountNumber == ScountNumber)
+	{
+		BcountNumber = (1 + rand() % 200) * 45;
+		cout << "change b" << endl;
+	}
 
 	for (auto const& i : m_vec)
-{
-	i.second->Update();
-}
+	{
+		i.second->Update();
+		if (STMA::StateChanging()) return;
+	}
 
-	//for (auto const& i : m_objects)
+	for (auto const& i : m_objects)
+	{
+		i.second->Update();
+		if (STMA::StateChanging()) return;
+	}
+
+	if (EVMA::KeyPressed(SDL_SCANCODE_P))
+	{
+		STMA::PushState(new PauseState()); // Add new PauseState
+	}
+
+	
+
+
+	//test collision
+	//works
+	PlatformPlayer* pObj = static_cast<PlatformPlayer*>(GetGo("player"));
+	SDL_FRect* pBound = pObj->GetDst();
+	Box* pBobj= static_cast<Box*>(GetGo("bs"));
+	Box* pSobj = static_cast<Box*>(GetGo("ss"));
+	for (size_t i = 0; i < m_Sbox.size(); i++)
+	{
+		SDL_FRect ePos = m_Sbox[i].second->m_dst;
+		
+		if (COMA::AABBCheck(*pBound, ePos))
+		{
+				cout << "player died" << endl;
+				
+				STMA::ChangeState(new LoseState());	
+		}
+
+	}
+
+	for (size_t i = 0; i < m_Bbox.size(); i++)
+	{
+		SDL_FRect ePos = m_Bbox[i].second->m_dst;
+
+		if (COMA::AABBCheck(*pBound, ePos))
+		{
+			cout << "player died" << endl;
+			STMA::ChangeState(new LoseState());	
+		}
+
+	}
+
+	if (pBound->y >450)
+	{
+		pObj->StopY();
+		pObj->SetY(450);
+		pObj->SetGrounded(true);
+	}
+	
+		time_t time_sec = 0;
+		time_t old_sec = 0;
+		time(&time_sec);              //获取当前秒数（1970-1-1 00:00:00到现在）
+		printf("%02d\r", sec);
+		old_sec = time_sec;           //更新旧的秒数
+		while (sec > 0)
+		{
+			time(&time_sec);          //获取秒数保存到time_t变量
+			if (time_sec != old_sec)   //如果秒数改变（计时达到1秒）
+			{
+				old_sec = time_sec;   //更新旧的秒数
+				if (sec > 0)
+				{
+					sec++;            //计时秒数减1
+				}
+				printf("%02d\r", sec);
+			}
+		}
+
+
+	//used test files
+	
+	//if(COMA::AABBCheck(*pBound, *pBoxBound))
 	//{
-	//	i.second->Update();
-	//	if (STMA::StateChanging()) return;
+	//	cout << "player died" << endl;
 	//}
 
-	//if (EVMA::KeyPressed(SDL_SCANCODE_P))
-	//{
-	//	STMA::PushState(new PauseState()); // Add new PauseState
-	//}
 
 	////check collision
 	//PlatformPlayer* pObj = static_cast<PlatformPlayer*>(GetGo("player"));
@@ -191,12 +341,30 @@ void GameState::Render()
 
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
-	//for (auto const& i : m_objects)
-	//	i.second->Render();
+
 	for (auto const& i : m_vec)
 		i.second->Render();
+
+
+	for (size_t i = 0; i < m_Sbox.size(); i++)
+	{
+		m_Sbox[i].second->Render();
+	}
+
+	for (size_t i = 0; i < m_Bbox.size(); i++)
+	{
+		m_Bbox[i].second->Render();
+	}
+
+	for (auto const& i : m_objects)
+		i.second->Render();
+
+
 	if ( dynamic_cast<GameState*>(STMA::GetStates().back()) ) 
 		State::Render();
+
+
+	
 }
 
 void GameState::Exit()
@@ -210,7 +378,6 @@ void GameState::Exit()
 	m_vec.clear();
 	m_vec.shrink_to_fit();
 
-	/*TEMA::Unload( "tiles");
 	TEMA::Unload("player");
 	for (auto& i : m_objects)
 	{
@@ -218,12 +385,41 @@ void GameState::Exit()
 		i.second = nullptr;
 	}
 	m_objects.clear();
-	m_objects.shrink_to_fit();*/
+	m_objects.shrink_to_fit();
+
+
+	TEMA::Unload("bs");
+	for (size_t i = 0; i < m_Sbox.size(); i++)
+	{
+		delete m_Sbox[i].second;
+		m_Sbox[i].second = nullptr;
+	}
+	m_Sbox.clear();
+	m_Sbox.shrink_to_fit();
+
+
+	TEMA::Unload("ss");
+	for (size_t i = 0; i < m_Bbox.size(); i++)
+	{
+		delete m_Bbox[i].second;
+		m_Bbox[i].second = nullptr;
+	}
+	m_Bbox.clear();
+	m_Bbox.shrink_to_fit();
+
+	
+
 }
 
 void GameState::Resume()
 {
 	cout << "Resuming GameState..." << endl;
+}
+
+
+void GameState::deadtimer()
+{
+
 }
 // End GameState
 
