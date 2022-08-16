@@ -1,5 +1,3 @@
 <Root>
-    <GameObject class="turret" x_position="100" y_position="300"/>
-    <GameObject class="enemies" x_position="487" y_position="228"/>
-    <GameObject class="enemies" x_position="1023" y_position="385"/>
+    <GameObject class="time" run_time ="4"/>
 </Root>

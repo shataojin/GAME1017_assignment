@@ -146,6 +146,7 @@
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EventManager.cpp" />
+    <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MathManager.cpp" />
     <ClCompile Include="PlatformPlayer.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="States.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TiledLevel.cpp" />
+    <ClCompile Include="tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h" />
@@ -163,6 +165,7 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EventManager.h" />
+    <ClInclude Include="FontManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="MathManager.h" />
     <ClInclude Include="PlatformPlayer.h" />
@@ -172,6 +175,7 @@
     <ClInclude Include="States.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TiledLevel.h" />
+    <ClInclude Include="tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Img\button.png" />
@@ -183,6 +187,9 @@
   <ItemGroup>
     <Text Include="Dat\Level1.txt" />
     <Text Include="Dat\Tiledata.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="SavedObjects.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -50,14 +50,14 @@ void PlatformPlayer::Update()
 		// Move on ground.
 		if (EVMA::KeyHeld(SDL_SCANCODE_A))
 		{
-			m_accelX = -1.5;
+			m_accelX = -2;
 			// Set accelX to negative.
 			if (!m_isFacingLeft)
 				m_isFacingLeft = true;
 		}
 		else if (EVMA::KeyHeld(SDL_SCANCODE_D))
 		{
-			m_accelX = 1.5;
+			m_accelX = 2;
 			// Set accelX to positive.
 			if (m_isFacingLeft)
 				m_isFacingLeft = false;
@@ -120,7 +120,9 @@ void PlatformPlayer::Update()
 		}
 		if (EVMA::KeyHeld(SDL_SCANCODE_S))
 		{
+			
 			m_state = STATE_ROLLING;
+
 			//temport change size
 		/*	GetDst()->h = GetDst()->h / 2;*/
 		}
@@ -133,10 +135,16 @@ void PlatformPlayer::Update()
 		break;
 
 	case DEAD:
-		if (EVMA::KeyPressed(SDL_SCANCODE_G))
+		if (EVMA::KeyHeld(SDL_SCANCODE_G))
 		{
+			m_state = DEAD;
 			m_playerDie = true;
-			SetAnimation(5, 0, 9, 384);
+			
+		}
+		if (!EVMA::KeyHeld(SDL_SCANCODE_G))
+		{
+			m_state = STATE_IDLING;
+			SetAnimation(1, 0, 1, 256); // , 256
 		}
 		break;
 

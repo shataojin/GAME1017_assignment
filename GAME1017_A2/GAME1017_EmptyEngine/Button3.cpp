@@ -9,9 +9,9 @@ Button3::Button3(SDL_Rect s, SDL_FRect d, const char* k) :SpriteObject(s, d), m_
 
 void Button3::Update()
 {
-	/*SOMA::Load("Aud/Moo1.wav", "play", SOUND_SFX);
+	SOMA::Load("Aud/Moo1.wav", "play", SOUND_SFX);
 	SOMA::Load("Aud/Moo2.wav", "exit", SOUND_SFX);
-	SOMA::Load("Aud/Fire.wav", "raesume", SOUND_SFX);*/
+	SOMA::Load("Aud/Fire.wav", "raesume", SOUND_SFX);
 	bool col = COMA::PointAABBCheck(EVMA::GetMousePos(), m_dst);
 	EVMA::SetCursor(col?SDL_SYSTEM_CURSOR_HAND:SDL_SYSTEM_CURSOR_ARROW);
 	switch (m_state)

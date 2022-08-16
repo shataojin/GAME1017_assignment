@@ -11,9 +11,16 @@
 #include"Background.h"
 #include"Box.h"
 #include <iostream>
-
 #include <stdio.h>
 #include <time.h>
+#include "tinyxml2.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
+
+
+using namespace tinyxml2;
 using namespace std;
 
 void State::Render()
@@ -115,22 +122,39 @@ GameState::GameState(){}
 void GameState::Enter() // Used for initialization.
 {
 
+	XMLDocument xmlDoc;
+	xmlDoc.LoadFile("SavedObjects.xml");
+	XMLNode* pRoot = xmlDoc.FirstChildElement("Root");
+	// Iterate through the Turret elements in the file and push_back new Turrets into the m_turrets vector.
+	XMLElement* pElement = pRoot->FirstChildElement("GameObject");
+	while (pElement != nullptr)
+	{
+		if (strcmp(pElement->Attribute("class"), "time") == 0)
+		{
+			int numebr;
+			pElement->QueryIntAttribute("run_time ", &numebr);
+			cout << "run time " << numebr << endl;
+		}
+		pElement = pElement->NextSiblingElement("longers time ");
+	}
+
+
 
 	TEMA::Load("Img/BG.png", "bg");
 	m_vec.reserve(10);
 	// Backgrounds.
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({0,0,1024,768}, {0,0,1024,768}, 1)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 0,0,1024,768 }, { 0,0,1024,768 }, 1)));
 	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 0,0,1024,768 }, { 1024,0,1024,768 }, 1)));
 	// Midgrounds.
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 0,0,256,512 }, 2)));
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 256,0,256,512 }, 2)));
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 512,0,256,512 }, 2)));
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 768,0,256,512 }, 2)));
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,0,256,512 }, { 1024,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,0,256,512 }, { 0,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,0,256,512 }, { 256,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,0,256,512 }, { 512,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,0,256,512 }, { 768,0,256,512 }, 2)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,0,256,512 }, { 1024,0,256,512 }, 2)));
 	// Foregrounds.
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,512,521,256 }, { 0,512,512,256 }, 4)));
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,512,521,256 }, { 512,512,512,256 }, 4)));
-	m_vec.push_back(pair<string, GameObject*>("bg",new Background({ 1024,512,521,256 }, { 1024,512,512,256 }, 4)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,512,521,256 }, { 0,512,512,256 }, 4)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,512,521,256 }, { 512,512,512,256 }, 4)));
+	m_vec.push_back(pair<string, GameObject*>("bg", new Background({ 1024,512,521,256 }, { 1024,512,512,256 }, 4)));
 
 
 	TEMA::Load("Img/Player.png", "player");
@@ -141,7 +165,8 @@ void GameState::Enter() // Used for initialization.
 
 	TEMA::Load("Img/BG.png", "bs");
 	//m_Bbox.push_back(pair<string, GameObject*>("bs", new Box({ 0,0,128,128 }, { WIDTH + 50,0 ,64,300 })));
-	
+
+	/*m_label.push_back(pair<string, GameObject*>("Label", new Label("Label",300,300,"works!!!!plz")));*/
 }
 
 void GameState::Update()
@@ -155,10 +180,15 @@ void GameState::Update()
 		{
 			m_SspawnCtr = 1;
 			ScountNumber = (1 + rand() % 200) * 30;
-			m_Sbox.push_back(pair<string, GameObject*>("ss", new Box({ 0,0,128,128 }, { WIDTH + 50,485 ,64,64 })));
+			m_Sbox.push_back(pair<string, GameObject*>("ss", new Box({ 0,0,128,128 }, { WIDTH + 50,490 ,64,64 })));
 			cout << ScountNumber << endl;
 		}
-
+		if (timercounter++ % counter == 0)
+		{
+			timercounter = 1;
+			RunTime++;
+			cout <<"time"<< RunTime << endl;
+		}
 	}
 	for (auto const& i : m_Sbox)
 	{
@@ -185,10 +215,11 @@ void GameState::Update()
 
 		{
 			m_BspawnCtr = 1;
-			BcountNumber = (1 + rand() % 200) * 40;
-			m_Bbox.push_back(pair<string, GameObject*>("bs", new Box({ 0,0,128,128 }, { WIDTH + 50,0 ,64,342 })));
+			BcountNumber = (1 + rand() % 200) * 50;
+			m_Bbox.push_back(pair<string, GameObject*>("bs", new Box({ 0,0,128,128 }, { WIDTH + 50,0 ,64,341 })));
 			cout << BcountNumber << endl;
 		}
+	
 
 	}
 	for (auto const& i : m_Bbox)
@@ -224,6 +255,7 @@ void GameState::Update()
 	{
 		i.second->Update();
 		if (STMA::StateChanging()) return;
+
 	}
 
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
@@ -271,25 +303,11 @@ void GameState::Update()
 		pObj->SetY(450);
 		pObj->SetGrounded(true);
 	}
+
 	
-		time_t time_sec = 0;
-		time_t old_sec = 0;
-		time(&time_sec);              //获取当前秒数（1970-1-1 00:00:00到现在）
-		printf("%02d\r", sec);
-		old_sec = time_sec;           //更新旧的秒数
-		while (sec > 0)
-		{
-			time(&time_sec);          //获取秒数保存到time_t变量
-			if (time_sec != old_sec)   //如果秒数改变（计时达到1秒）
-			{
-				old_sec = time_sec;   //更新旧的秒数
-				if (sec > 0)
-				{
-					sec++;            //计时秒数减1
-				}
-				printf("%02d\r", sec);
-			}
-		}
+
+	
+	
 
 
 	//used test files
@@ -359,6 +377,8 @@ void GameState::Render()
 	for (auto const& i : m_objects)
 		i.second->Render();
 
+	for (auto const& i : m_label)
+		i.second->Render();
 
 	if ( dynamic_cast<GameState*>(STMA::GetStates().back()) ) 
 		State::Render();
@@ -369,6 +389,21 @@ void GameState::Render()
 
 void GameState::Exit()
 {
+
+	XMLDocument xmlDoc;
+	//DeleteChildren
+	xmlDoc.DeleteChildren();
+	// Create and insert a Root element.
+	XMLNode* pRoot = xmlDoc.NewElement("Root");
+	xmlDoc.InsertEndChild(pRoot);
+
+		XMLElement* pElement = xmlDoc.NewElement("GameObject");
+		pElement->SetAttribute("class", "time");
+		pElement->SetAttribute("run_time ",RunTime);
+		pRoot->InsertEndChild(pElement);
+		xmlDoc.SaveFile("SavedObjects.xml");
+
+
 	TEMA::Unload( "bg");
 	for (auto& i : m_vec)
 	{
@@ -419,7 +454,23 @@ void GameState::Resume()
 
 void GameState::deadtimer()
 {
-
+	
+	time(&time_sec);              //获取当前秒数（1970-1-1 00:00:00到现在）
+	printf("%02d\r", sec);
+	old_sec = time_sec;           //更新旧的秒数
+	while (sec > 0)
+	{
+		time(&time_sec);          //获取秒数保存到time_t变量
+		if (time_sec != old_sec)   //如果秒数改变（计时达到1秒）
+		{
+			old_sec = time_sec;   //更新旧的秒数
+			if (sec > 0)
+			{
+				sec++;            //计时秒数减1
+			}
+			printf("%02d\r", sec);
+		}
+	}
 }
 // End GameState
 

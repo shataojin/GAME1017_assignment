@@ -64,6 +64,12 @@
     <ClCompile Include="box.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
+    <ClCompile Include="tinyxml2.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="FontManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -111,6 +117,12 @@
     <ClInclude Include="box.h">
       <Filter>Objects</Filter>
     </ClInclude>
+    <ClInclude Include="tinyxml2.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="FontManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Img\button.png">
@@ -136,5 +148,10 @@
     <Text Include="Dat\Tiledata.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="SavedObjects.xml">
+      <Filter>Resource Files</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 
 #include "TiledLevel.h"
 #include "GameObject.h"
+#include "Primitives.h"
 
 class State // This is the abstract base class for all states
 {
@@ -25,8 +26,12 @@ public:
 	int m_Stimer = 1;
 	int ScountNumber = 180;
 	int dieTimer = 600;
+	int RunTime = 0;
+	int timercounter = 1;
+	int counter = 600;
 	int  sec = 1;
-
+	time_t time_sec = 0;
+	time_t old_sec = 0;
 
 protected: // Private but inherited
 	State() {} // What does this prevent?
@@ -35,6 +40,8 @@ protected: // Private but inherited
 	vector<std::pair<std::string, GameObject*>> m_vec;
 	vector<std::pair<std::string, GameObject*>> m_Sbox;
 	vector<std::pair<std::string, GameObject*>> m_Bbox;
+	vector<std::pair<std::string, GameObject*>> m_label;
+
 };
 
 class TitleState : public State
