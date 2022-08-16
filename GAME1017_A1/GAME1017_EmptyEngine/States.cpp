@@ -171,6 +171,11 @@ void GameState::Update()
 		Mix_AllocateChannels(16);
 	}
 
+	if (EVMA::KeyPressed(SDL_SCANCODE_M))
+	{
+		STMA::Quit();
+	}
+
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
 	{
 		STMA::PushState(new PauseState());
