@@ -1,11 +1,10 @@
 #include "Engine.h"
-#include "CollisionManager.h"
-#include "EventManager.h"
-#include "StateManager.h"
-#include "TextureManager.h"
+#include <ctime>
 #include "StateManager.h"
 #include "States.h"
-#include <ctime>
+#include "TextureManager.h"
+#include "EventManager.h"
+#include "SoundManager.h"
 
 int Engine::Init(const char* title, int xPos, int yPos, int width, int height, int flags)
 {
@@ -21,8 +20,9 @@ int Engine::Init(const char* title, int xPos, int yPos, int width, int height, i
 			m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, NULL);
 			if (m_pRenderer != nullptr)
 			{
-				EVMA::Init();
 				TEMA::Init();
+				EVMA::Init();
+				SOMA::Init();
 			}
 			else return false; // Renderer creation failed.
 		}
@@ -31,7 +31,8 @@ int Engine::Init(const char* title, int xPos, int yPos, int width, int height, i
 	else return false; // initalization failed.
 	m_fps = (Uint32)round(1.0 / (double)FPS * 1000); // Converts FPS into milliseconds, e.g. 16.67
 	m_keystates = SDL_GetKeyboardState(nullptr);
-	STMA::ChangeState( new TitleState() );
+	m_startLast = SDL_GetTicks();
+	STMA::PushState(new TitleState());
 	cout << "Initialization successful!" << endl;
 	m_running = true;
 	return true;
@@ -40,6 +41,8 @@ int Engine::Init(const char* title, int xPos, int yPos, int width, int height, i
 void Engine::Wake()
 {
 	m_start = SDL_GetTicks();
+	m_deltaTime = (m_start - m_startLast) / 1000.0;
+	m_startLast = m_start;
 }
 
 void Engine::HandleEvents()
@@ -63,6 +66,7 @@ void Engine::Sleep()
 	m_delta = m_end - m_start; // 1055 - 1050 = 5ms
 	if (m_delta < m_fps)
 		SDL_Delay(m_fps - m_delta);
+
 }
 
 int Engine::Run()
@@ -72,7 +76,7 @@ int Engine::Run()
 		return 1;
 	}
 	// Start and run the "engine"
-	if (Init("GAME1017_LE1", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, NULL) == false)
+	if (Init("GAME1017 platfromer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, NULL) == false)
 	{
 		return 2;
 	}
@@ -90,11 +94,12 @@ int Engine::Run()
 	return 0;
 }
 
-Engine& Engine::Instance() // No static keyword required.
+Engine& Engine::Instance()
 {
-	static Engine instance; // Creating an object of Engine. Magic statics.
+	static Engine instance; // Magic statics. Creating the object.
 	return instance;
 }
+
 
 void Engine::Clean()
 {
@@ -102,8 +107,12 @@ void Engine::Clean()
 	STMA::Quit();
 	SDL_DestroyRenderer(m_pRenderer);
 	SDL_DestroyWindow(m_pWindow);
-	EVMA::Quit();
 	TEMA::Quit();
+	EVMA::Quit();
+	SOMA::Quit();
 	IMG_Quit();
 	SDL_Quit();
 }
+
+bool& Engine::Running() { return m_running; } // Getter.
+void Engine::SetRunning(const bool b) { m_running = b; }

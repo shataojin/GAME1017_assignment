@@ -1,47 +1,31 @@
 #pragma once
 #ifndef _STATES_H_
 #define _STATES_H_
-#include "Turret.h"
-#include "Enemy.h"
-#include <vector>
-#include "Button.h"
-#include "BButton.h"
-#include "SoundManager.h"
-// An abstract class is one that cannot be instantiated. 
-// Why? Because they'd be a base class most likely.
-class State // This is the abstract base class for all state subclasses.
+
+#include "TiledLevel.h"
+#include "GameObject.h"
+
+class State // This is the abstract base class for all states
 {
-protected: // Private but inherited.
-	State() = default; // Or State() {};
-	SDL_Texture* m_pBGText;
-	SDL_Renderer* m_pRenderer;
 public:
-	virtual void Enter() = 0; // = 0 means pure virtual. Method MUST be defined in subclass.
-	virtual void Update() = 0;
+	virtual void Enter() = 0; // = 0 means pure virtual - must be defined in subclass
+	virtual void Update() = 0; 
 	virtual void Render();
 	virtual void Exit() = 0;
-	virtual void Resume() {};
+	virtual void Resume(); 
+	virtual ~State() {} // or = default;
+	GameObject* GetGo(const std::string& s);
+	auto GetIt(const std::string& s);
+protected: // Private but inherited
+	State() {} // What does this prevent?
+	vector<std::pair<std::string, GameObject*>> m_objects;
+	vector<std::pair<std::string, GameObject*>> m_objectre;
 };
 
 class TitleState : public State
 {
-private: // Private properties.
-	std::vector<Button*> m_button;
-	Mix_Music* m_pMusic;
-public: // Public methods.
+public:
 	TitleState();
-	virtual void Enter();
-	virtual void Update();
-	virtual void Render();
-	virtual void Exit();
-};
-
-class PauseState : public State
-{
-private:
-	std::vector<Button*> m_button;
-public: // Public methods.
-	PauseState();
 	virtual void Enter();
 	virtual void Update();
 	virtual void Render();
@@ -50,49 +34,19 @@ public: // Public methods.
 
 class GameState : public State
 {
-private:
-	Mix_Music* m_pMusic;
-	Mix_Chunk* m_pSound;
-	SDL_Texture* m_pBGText;
-	SDL_Renderer* m_pRenderer;
-	std::vector<Button*> m_button;
-	std::vector<Turret*> m_turrets;
-	static std::vector<Enemy*> s_enemies;
-	static std::vector<Bullet*> s_bullets;
-	static std::vector<AiBullet*> s_aibullets;
-	int m_spawnCtr;
-	void ClearTurrets();
-public: // Public methods.
+public:
 	GameState();
 	virtual void Enter();
 	virtual void Update();
 	virtual void Render();
 	virtual void Exit();
 	virtual void Resume();
-	static std::vector<Bullet*>& Bullets() { return s_bullets; }
-	static std::vector<Enemy*>& Enemies() { return s_enemies; }
-	static std::vector<AiBullet*>& AiBullet() { return s_aibullets; }
-	int killCount = 0;
 };
 
-class LoseState : public State
+class PauseState : public State
 {
-private: // Private properties.
-	std::vector<Button*> m_button;
-public: // Public methods.
-	LoseState();
-	virtual void Enter();
-	virtual void Update();
-	virtual void Render();
-	virtual void Exit();
-};
-
-class WinState : public State
-{
-private: // Private properties.
-	std::vector<Button*> m_button;
-public: // Public methods.
-	WinState();
+public:
+	PauseState();
 	virtual void Enter();
 	virtual void Update();
 	virtual void Render();
@@ -100,3 +54,4 @@ public: // Public methods.
 };
 
 #endif
+

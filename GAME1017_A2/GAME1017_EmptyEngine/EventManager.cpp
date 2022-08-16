@@ -26,7 +26,7 @@ void EventManager::HandleEvents()
 		switch (event.type) // Parse some global events.
 		{
 			case SDL_QUIT: // User pressed window's 'x' button.
-				Engine::Instance().Running() = false;
+				Engine::Instance().Running() = false; // The dangers of returning a reference in a getter.
 				break;
 			case SDL_KEYDOWN:
 				s_lastKeyDown = event.key.keysym.sym;
@@ -34,7 +34,7 @@ void EventManager::HandleEvents()
 			case SDL_KEYUP:
 				s_lastKeyUp = event.key.keysym.sym;
 				if (event.key.keysym.sym == SDLK_ESCAPE)
-					Engine::Instance().Running() = false;
+					Engine::Instance().Running() = false; // Should be: .SetRunning(false);
 				break;
 		}
 	}

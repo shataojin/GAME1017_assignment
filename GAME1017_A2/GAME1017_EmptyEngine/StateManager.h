@@ -5,24 +5,27 @@
 #include "States.h"
 #include <vector>
 
-// We're going to make StateManager a "static class".
-class StateManager // This is our finite state machine (FSM)
+class StateManager
 {
-private:
-	static std::vector<State*> s_states; // s_ is my convention for static properties.
-private:
-	StateManager() = default;
-public:
+private: // Public properties
+	static std::vector<State*> s_states;
+	static bool s_stateChange;
+
+public: // Public methods
 	static void Update();
 	static void Render();
-	static void PushState(State* pState);
-	static void PopState();
+	static void PushState(State* pState); // Used when going to PauseState
+	static void PopState(); // Used when leaving PauseState
 	static void ChangeState(State* pState);
-	static void Quit();
-	static std::vector<State*>& GetStates(); // Getter for the s_states.
+	static void Quit(); // Used for cleanup
+	static std::vector<State*>& GetStates(); // returns a reference to our State* vector
+	static const bool StateChanging();
+
+private: // Private methods
+	StateManager() {}
 };
 
-typedef StateManager STMA;
+typedef StateManager STMA; // Creating a shorter alias
 
 #endif
 

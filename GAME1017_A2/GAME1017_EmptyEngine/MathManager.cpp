@@ -11,21 +11,6 @@ double MathManager::Distance(const SDL_FRect* r1, const SDL_FRect* r2)
 	return sqrt((r2->x - r1->x) * (r2->x - r1->x) + (r2->y - r1->y) * (r2->y - r1->y));
 }
 
-SDL_FPoint MathManager::Normalize(SDL_FPoint v)
-{
-	SDL_FPoint norm = { 0.0f, 0.0f };
-	float x = v.x;
-	float y = v.y;
-	float length = (x * x) + (y * y);
-	if (length > 0)
-	{
-		length = 1.0 / sqrt(length);
-		norm.x = x * length;
-		norm.y = y * length;
-	}
-	return norm;
-}
-
 double MathManager::AngleBetweenPoints(const double dy, const double dx)
 {
 	return atan2(dy, dx); // In radians.

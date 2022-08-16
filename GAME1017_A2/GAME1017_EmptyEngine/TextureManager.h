@@ -4,8 +4,8 @@
 
 #include <map>
 #include <string>
-#include <SDL.h>
-#include <SDL_image.h>
+#include "SDL.h"
+#include "SDL_image.h"
 
 class TextureManager
 {
@@ -26,3 +26,4 @@ private: // Private methods.
 typedef TextureManager TEMA;
 
 #endif
+

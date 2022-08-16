@@ -1,14 +1,13 @@
 #pragma once
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
-#include "SDL_image.h"
-#include "SDL_mixer.h"
+
 #include <iostream>
 #include <map>
 #include <string>
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_mixer.h>
+#include "SDL.h"
+#include "SDL_image.h"
+#include "SDL_mixer.h"
 #define FPS 60
 #define WIDTH 1024
 #define HEIGHT 768
@@ -18,28 +17,30 @@ class Engine
 {
 private: // private properties.
 	bool m_running = false;
-	Uint32 m_start, m_end, m_delta, m_fps;
+	Uint32 m_start, m_startLast, m_end, m_delta, m_fps;
+	double m_deltaTime;
 	const Uint8* m_keystates;
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
 
 private: // private method prototypes.
-	Engine() { cout << "Engine object created..." << endl; }
+	Engine() {} // Prevents instantiation outside class.
 	int Init(const char* title, int xPos, int yPos, int width, int height, int flags);
 	void Clean();
 	void Wake();
 	void HandleEvents();
-	// Moved KeyDown from here to EventManager.
+	// Moved KeyDown from here.
 	void Update();
 	void Render();
 	void Sleep();
 
 public: // public method prototypes.
 	int Run();
-	// Add static method for singleton here
-	static Engine& Instance(); // We can invoke this without having an object of Engine.
-	SDL_Renderer* GetRenderer() { return m_pRenderer; }
-	bool& Running() { return m_running; } // For EventManager.
+	static Engine& Instance(); // Static method for object access.
+	SDL_Renderer* GetRenderer() const { return m_pRenderer; }
+	double GetDeltaTime() const { return m_deltaTime; }
+	bool& Running();
+	void SetRunning(const bool b);
 };
 
 #endif
